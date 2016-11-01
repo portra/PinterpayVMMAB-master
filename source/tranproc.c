@@ -370,6 +370,188 @@ void SetCommReqField(void)
 		memcpy(glSendPack.szBit48, "\x00\x03", 2);
 		sprintf((char *)&glSendPack.szBit48[2], "%-3.3s", glProcInfo.szSecurityCode);
 	}
+	
+	if( glProcInfo.stTranLog.ucTranType==INQPINTERPAY)
+		{
+			uchar f48[20];
+			uchar rekening[12+1];
+			uchar szlen[4];
+			int len=0;
+			len=strlen(glProcInfo.stTranLog.szRekening);
+			sprintf(szlen,"%d",len);
+			PubAddHeadChars(szlen, 4, '0');
+			if (len <= 0xFFFF)
+			{
+				sprintf(&szlen[0], "%04x", len);
+			}
+			PubAsc2Bcd(szlen, 4, glSendPack.szBit48);
+			strcpy(rekening,glProcInfo.stTranLog.szRekening);
+			PubAddHeadChars(rekening, len, '0');
+			sprintf(f48, "%s", rekening);
+			sprintf((char *)&glSendPack.szBit48[2], "%-*.*s",len, len,f48);
+		}
+	
+		
+		if( glProcInfo.stTranLog.ucTranType==PINTERPAY)
+		{
+			uchar szBuffer[999],szQty[3],szPackageCode[8];
+			int len = 0;
+			int n=0;
+			uchar szlen[4];
+			memset(szBuffer, 0, sizeof(szBuffer));
+			sprintf((char *)glSendPack.szBit12, "%.6s",  &glProcInfo.stTranLog.szDateTime[8]);
+			sprintf((char *)glSendPack.szBit13, "%.4s",  &glProcInfo.stTranLog.szDateTime[4]);
+			//field 63
+			for(n;n<counterPackage;n++){
+				memset(szQty, 0, sizeof(szQty));
+				memset(szPackageCode, 0, sizeof(szPackageCode));
+				sprintf(szPackageCode,"%8.8s",glPackageList[n].sPackageCode);
+				sprintf(szQty,"%3.3d",glPackageList[n].uiTotal);
+				PubAddHeadChars(szPackageCode, strlen(szPackageCode), '0');
+				PubAddHeadChars(szQty, strlen(szQty), '0'); 
+				sprintf(szBuffer,"%s%8.8s%3.3s",szBuffer,szPackageCode,szQty);
+			}
+			len=counterPackage*11;
+			sprintf(szlen,"%d",len);
+			PubAddHeadChars(szlen, 4, '0');
+			if (len <= 0xFFFF)
+			{
+				sprintf(&szlen[0], "%04x", len);
+			}
+			PubAsc2Bcd(szlen, 4, glSendPack.szBit63);
+			sprintf((char *)&glSendPack.szBit63[2], "%-*.*s",len, len,szBuffer);
+		}
+	
+		if( glProcInfo.stTranLog.ucTranType==INQPPOB)
+		{
+			uchar f48[66];
+			uchar rekening[22];
+			uchar product[22];
+			uchar productCode[22];
+			uchar szlen[4];
+			int len=22;
+			memset(rekening, 0, sizeof(rekening));
+			memset(product, 0, sizeof(product));
+			memset(productCode, 0, sizeof(productCode));
+			//memcpy(rekening,glProcInfo.stTranLog.szAccount, sizeof(rekening));
+			//memcpy(product,glProcInfo.stTranLog.szKodePpob, sizeof(product));
+			//memcpy(productCode,glProcInfo.stTranLog.szKodeProduk, sizeof(productCode));
+			strcpy(rekening,glProcInfo.stTranLog.szAccount);
+			strcpy(product,glProcInfo.stTranLog.szKodePpob);
+			strcpy(productCode,glProcInfo.stTranLog.szKodeProduk);
+			//PubAddHeadChars(rekening, 22, ' ');
+			//PubAddHeadChars(product, 22, ' '); 
+			//PubAddHeadChars(productCode, 22, ' ');
+			sprintf(f48,"%22.22s%22.22s%22.22s",rekening,product,productCode);
+			//sprintf(f48,"%s%s%s",rekening,product,productCode);
+			/*len=strlen(f48);
+			sprintf(szlen,"%d",len);
+			PubAddHeadChars(szlen, 4, '0');
+			if (len <= 0xFFFF)
+			{
+				sprintf(&szlen[0], "%04x", len);
+			}
+			PubAsc2Bcd(szlen, 4, glSendPack.szBit48);*/
+			memcpy(glSendPack.szBit48, "\x00\x42", 2);
+			sprintf((char *)&glSendPack.szBit48[2], "%-*.*s",66, 66,f48);
+			//sprintf((char *)&glSendPack.szBit48[2],"%-22.22s%-22.22s%-22.22s",rekening,product,productCode);
+			//sprintf((char *)&glSendPack.szBit48[2],"%22.22s%22.22s%22.22s",rekening,product,productCode);
+		}
+	
+		if( glProcInfo.stTranLog.ucTranType==PPOB)
+		{
+			uchar f48[88];
+			uchar rekening[22];
+			uchar product[22];
+			uchar productCode[22];
+			uchar reff[22];
+			uchar szlen[4];
+			int len=66;
+			memset(rekening, 0, sizeof(rekening));
+			memset(product, 0, sizeof(product));
+			memset(productCode, 0, sizeof(productCode));
+			strcpy(rekening,glProcInfo.stTranLog.szAccount);			
+			strcpy(product,glProcInfo.stTranLog.szKodePpob);
+			strcpy(productCode,glProcInfo.stTranLog.szKodeProduk);
+			if(memcmp(product,"PLN",3)==0&&memcmp(productCode,"PRA",3)==0){
+				strcpy(reff,glProcInfo.stTranLog.szVoucher);
+			}else{
+				strcpy(reff,glProcInfo.stTranLog.szTrxReff);
+			}
+			//PubAddHeadChars(rekening, 22, ' ');
+			//PubAddHeadChars(product, 22, ' '); 
+			//PubAddHeadChars(productCode, 22, ' ');
+			//PubAddHeadChars(reff, 22, ' ');
+			sprintf(f48,"%22.22s%22.22s%22.22s",rekening,product,glProcInfo.stTranLog.szKodeProduk);
+			/*len=strlen(f48);
+			sprintf(szlen,"%d",len);
+			PubAddHeadChars(szlen, 4, '0');
+			if (len <= 0xFFFF)
+			{
+				sprintf(&szlen[0], "%04x", len);
+			}
+			PubAsc2Bcd(szlen, 4, glSendPack.szBit48);*/
+			memcpy(glSendPack.szBit48, "\x00\x42", 2);
+			sprintf((char *)&glSendPack.szBit48[2], "%-*.*s",len, len,f48);
+			memcpy(glSendPack.szBit63, "\x00\x22", 2);
+			sprintf((char *)&glSendPack.szBit63[2], "%-*.*s",22, 22,reff);
+		}
+		
+		if( glProcInfo.stTranLog.ucTranType==PULSA )
+		{
+			uchar f48[88];
+			uchar noHp[22];
+			uchar kodeProduk[22];
+			uchar kodePpob[22];
+			uchar szlen[4];
+			uchar provider[22];
+			int len=88;
+			strcpy(provider,glProcInfo.stTranLog.szProvider);
+			strcpy(kodePpob,glProcInfo.stTranLog.szKodePpob);
+			strcpy(kodeProduk,glProcInfo.stTranLog.szKodeProduk);
+			strcpy(noHp,glProcInfo.stTranLog.szNoHP);
+			//PubAddHeadChars(provider, 22, ' ');
+			//PubAddHeadChars(kodePpob, 22, ' ');
+			//PubAddHeadChars(kodeProduk, 22, ' ');
+			//PubAddHeadChars(noHp, 22, ' ');
+			sprintf(f48, "%22.22s%22.22s%22.22s%22.22s", kodePpob,kodeProduk,noHp, provider);
+			len=strlen(f48);
+			sprintf(szlen,"%d",len);
+			/*PubAddHeadChars(szlen, 4, '0');
+			if (len <= 0xFFFF)
+			{
+				sprintf(&szlen[0], "%04x", len);
+			}
+			PubAsc2Bcd(szlen, 4, glSendPack.szBit48);*/
+			memcpy(glSendPack.szBit48, "\x00\x58", 2);
+			sprintf((char *)&glSendPack.szBit48[2], "%-*.*s",len, len,f48);
+			/*strcpy(kodeProduk,glProcInfo.stTranLog.szKodeProduk);
+			strcpy(noHp,glProcInfo.stTranLog.szNoHP);
+			memcpy(glSendPack.szBit48, "\x00\x25\x01", 3);
+			PubAddHeadChars(kodeProduk, 12, ' ');
+			PubAddHeadChars(noHp, 12, ' ');
+			strncpy(temp, noHp,12);
+			sprintf(f48, "%s%s", kodeProduk,temp);
+			sprintf((char *)&glSendPack.szBit48[3], "%-24.24s", f48);*/
+		}
+		
+		//PLNPRA
+			if( glProcInfo.stTranLog.ucTranType==PLNPRA )
+			{
+				uchar f48[20];
+				uchar nohp[12+1];
+				uchar rekening[12+1];
+				uchar nilai[12+1];
+				strcpy(nilai,glProcInfo.stTranLog.szAccount);
+				strcpy(rekening,glProcInfo.stTranLog.szNilai);
+				strcpy(nohp,glProcInfo.stTranLog.szNoHP);
+				memcpy(glSendPack.szBit48, "\x00\x24", 2);
+				PubAddHeadChars(rekening, 12, '0');
+				PubAddHeadChars(nilai, 12, ' ');
+				PubAddHeadChars(nohp, 12, '0');
+				sprintf(f48, "%s%s%s", rekening,nilai,nohp);
+				sprintf((char *)&glSendPack.szBit48[2], "%-36.36s", f48);
+			}
 	//==================================================================================
 
 	
