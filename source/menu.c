@@ -1052,13 +1052,11 @@ int PinterPayMenu(void)
 {
 	int		iRet=0, iMenuNo;
 	uchar	ucTranType;
-	static	MenuItem stTranMenu[5] =
+	static	MenuItem stTranMenu[3] =
 	{
 		{TRUE, _T_NOOP("PoinTrans"),	NULL},
 		{TRUE, _T_NOOP("Pulsa Elektrik"),	NULL},
-		{TRUE, _T_NOOP("PPOB"),	NULL},
-		{TRUE, _T_NOOP("ATM Bersama"),	NULL},
-		{TRUE, _T_NOOP("Mini ATM Bukopin"),	NULL}
+		{TRUE, _T_NOOP("PPOB"),	NULL}
 	};
 	static	uchar	szPrompt[]       = _T_NOOP("PLS SELECT:");
 
@@ -1077,11 +1075,11 @@ int PinterPayMenu(void)
 		iRet = PpobMenu();
 		break;
 
-	case 3:
+	//case 3:
 		/*TransMicro();
 		break;*/
 
-	case 4:
+	//case 4:
 		/*TransMicro();
 		break;*/
 

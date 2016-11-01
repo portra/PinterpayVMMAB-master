@@ -5,6 +5,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 ## 10.00
 ## 10.00
 ## 10.00
+## 10.00
 # Visual C++ Express 2008
 Project("{27E886ED-6C72-4FCD-B116-7D455A5814E2}") = "PinterpayVMMAB", "PinterpayVMMAB.vcproj", "{08ebe47d-30a5-4555-8953-fe1eb2d4bc04}"
 EndProject

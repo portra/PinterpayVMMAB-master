@@ -387,7 +387,7 @@ int TransAjPurchasePay(void)
 	if( ChkIfPrnReceipt() )
 	{
 		DispTransName();
-		CetakStrukBkpn(PRN_NORMAL);
+		CetakStrukAj(PRN_NORMAL);
 	}
 	
 
@@ -404,16 +404,26 @@ int TransLogonAj(void)
 	int		iRet;	
 	uchar	ucEntryMode=0;
 	uchar	ucAcqIndex, szTitle[16+1];
+	uchar	ucRet;
 
 	strcpy(glProcInfo.stTranLog.szTransName,"LOG ON");
 	ScrPrint(0, 0, CFONT|REVER, "%-16.16s", "  LOG ON  ");
 
+	/*
 	sprintf((char *)szTitle, "%.16s", glSysParam.ucAcqNum>8 ? "SELECT ACQ:" : "SELECT ACQUIRER");
 	iRet = SelectAcq(FALSE, szTitle, &ucAcqIndex);
 	if( iRet!=0 )
 	{
 		return;
 	}
+	*/
+
+	ucRet = FindAcqIdxByName("ATMB_AJ", FALSE);
+	if(ucRet==MAX_ACQ)
+		return;
+
+	SetCurAcq(ucRet);
+	
 			
 	iRet = TransInit(LOGON_AJ);
 	if( iRet!=0 )
@@ -1137,7 +1147,7 @@ for (i=0; i<=1; i++)
 		//PrnHeaderCardNumber();
 		PrnHeaderCardNumberBkpn();
 
-		PrnHeaderTraceApprCode();
+		PrnHeaderTraceRespCode();
 
 		PrnHeaderBatchRefNum();
 
@@ -1187,6 +1197,20 @@ for (i=0; i<=1; i++)
 	return 0;
 }	
 
+
+void PrnHeaderTraceRespCode(void)
+{
+	uchar szBuff[50+1];
+
+	MEM_ZERO(szBuff);
+	PrnSetNormal();
+	sprintf((char *)szBuff, "TRACE : %-25.06lu RESP CODE : %02s", glProcInfo.stTranLog.ulInvoiceNo,  glProcInfo.stTranLog.szRspCode);
+
+	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
+	PrnStr("\n");
+}
+
+
 void PrnFooterAj(void)
 {
 
@@ -1231,15 +1255,15 @@ void PrnPurchaseAj(void)
 	
 	MEM_ZERO(printTotal);
 
-	sprintf((char *)printTotal,  "AMOUNT : Rp. %s", glProcInfo.stTranLog.BRI.PUR_AJ.Total);
+	sprintf((char *)printTotal,  "Rp. %s", glProcInfo.stTranLog.BRI.PUR_AJ.Total);
 
 	//PrnSetBig();
 	PrnStr("\n");
 	PrnStr("\n");
-	//MultiLngPrnStr("AMOUNT:", DISP_LINE_LEFT);
-	//PrnStr("\n");
+	MultiLngPrnStr("AMOUNT :", DISP_LINE_LEFT);
+	PrnStr("\n");
 
-	MultiLngPrnStr(printTotal, DISP_LINE_RIGHT);
+	MultiLngPrnStr(printTotal, DISP_LINE_CENTER);
 	PrnSetNormal();
 	PrnStr("\n");
 	PrnStr("\n");

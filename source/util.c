@@ -1288,8 +1288,18 @@ switch(glProcInfo.stTranLog.ucTranType)
 			strcpy(szPan, "91");
 			memcpy(szPan+2, glProcInfo.stTranLog.szPan, strlen(glProcInfo.stTranLog.szPan)-2);
 			break;
+			// for AJ
 		case TRANS_TYPE_AJ_PAY_INQ:
-		case TRANS_TYPE_AJ_PAY:		
+		case TRANS_TYPE_AJ_PAY:	
+			// for PP
+		case PULSA:
+		case INQTRANS:
+		case INQPPOB:
+		case PPOB:
+		case INQPINTERPAY:
+		case PINTERPAY:
+		case PPAYAJ:
+		case PLNPRA:
 			strcpy(szPan, "93");
 			memcpy(szPan+2, glProcInfo.stTranLog.szPan, strlen(glProcInfo.stTranLog.szPan)-2);
 			break;

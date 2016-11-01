@@ -58,6 +58,9 @@ void PrnPurchaseAj(void);
 void MiniATMBSummaryReport(uchar FlagDate);
 void MiniATMBDetailReport(uchar FlagDate);
 
+void PrnHeaderTraceRespCode(void);
+
+
 
 
 

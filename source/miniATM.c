@@ -14935,6 +14935,11 @@ for (i=0; i<=1; i++)
 				PrnFooterInfoSaldo();
 				break;
 
+		case TRANS_TYPE_AJ_PAY:
+				PrnPurchaseAj();
+				PrnFooterAj();
+				break;
+
 				
 				
 		}
@@ -15684,6 +15689,11 @@ void MiniAtmParseDetailBkpn(uchar * date, uchar flagDate)
 
 			case TRANS_TYPE_PDAM_AETRA_BKPN:
 				sprintf(szTransType, "AETRA            ");
+				break;
+
+
+			case TRANS_TYPE_AJ_PAY:
+				sprintf(szTransType, "PURCHASE ATMB    ");
 				break;
 
 			

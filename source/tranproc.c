@@ -2591,6 +2591,7 @@ void TransEchoTest(void)
 }
 
 int TransInqPpob(uchar * ppobcode, uchar * product_code){
+	uchar	ucRet;
 	int		iRet;
 	uchar	ucEntryMode, ucAcqIndex, szTitle[16+1];
 
@@ -2613,12 +2614,13 @@ int TransInqPpob(uchar * ppobcode, uchar * product_code){
 		{
 			return iRet;
 		}
-	sprintf((char *)szTitle, "%.16s", glSysParam.ucAcqNum>8 ? "SELECT ACQ:" : "SELECT ACQUIRER");
-	iRet = SelectAcq(FALSE, szTitle, &ucAcqIndex);
-	if( iRet!=0 )
-	{
+		
+	ucRet = FindAcqIdxByName("ATMB_AJ", FALSE);
+	if(ucRet==MAX_ACQ)
 		return;
-	}
+
+	SetCurAcq(ucRet);
+	
 		//ScrCls();
 		//DispTransName();
 		SetCommReqField();
@@ -2653,6 +2655,7 @@ int TransInqPpob(uchar * ppobcode, uchar * product_code){
 int TransInqPulsa(){
 	int		iRet;
 	uchar	ucEntryMode, ucAcqIndex, szTitle[16+1];
+	uchar	ucRet;
 
 	iRet = TransInit(INQTRANS);
 	if( iRet!=0 )
@@ -2669,12 +2672,21 @@ int TransInqPulsa(){
 	{
 		return iRet;
 	}
+	/*
 	sprintf((char *)szTitle, "%.16s", glSysParam.ucAcqNum>8 ? "SELECT ACQ:" : "SELECT ACQUIRER");
 	iRet = SelectAcq(FALSE, szTitle, &ucAcqIndex);
 	if( iRet!=0 )
 	{
 		return;
 	}
+	*/
+
+	ucRet = FindAcqIdxByName("ATMB_AJ", FALSE);
+	if(ucRet==MAX_ACQ)
+		return;
+
+	SetCurAcq(ucRet);
+	
 		SetCommReqField();
 		iRet = SendRecvPacket();
 		if( iRet!=0 )
@@ -2704,6 +2716,7 @@ int TransInqPinterpay(){
 	uchar	ucEntryMode;
 	uchar	ucAcqIndex;
 	uchar	szTitle[16+1];
+	uchar	ucRet;
 
 	iRet = TransInit(INQPINTERPAY);
 	if( iRet!=0 )
@@ -2715,20 +2728,22 @@ int TransInqPinterpay(){
 	{
 		return iRet;
 	}
+	/*
 	sprintf((char *)szTitle, "%.16s", glSysParam.ucAcqNum>8 ? "SELECT ACQ:" : "SELECT ACQUIRER");
 	iRet = SelectAcq(FALSE, szTitle, &ucAcqIndex);
 	if( iRet!=0 )
 	{
 		return;
 	}
+	*/
 
-/*
+
 	ucRet = FindAcqIdxByName("ATMB_AJ", FALSE);
 	if(ucRet==MAX_ACQ)
 		return;
 
 	SetCurAcq(ucRet);
-*/
+
 
 	
 		ScrCls();
@@ -3347,18 +3362,20 @@ int TransPurchaseItem(uchar * kodeProduk, uchar * codeppob, uchar * provider)
 {
 	int		iRet;
 	uchar	ucEntryMode, ucAcqIndex, szTitle[16+1];
+	uchar	ucRet;
 
 	iRet = TransInit(PULSA);
 	if( iRet!=0 )
 	{
 		return iRet;
 		}
-	sprintf((char *)szTitle, "%.16s", glSysParam.ucAcqNum>8 ? "SELECT ACQ:" : "SELECT ACQUIRER");
-	iRet = SelectAcq(FALSE, szTitle, &ucAcqIndex);
-	if( iRet!=0 )
-	{
+	
+	ucRet = FindAcqIdxByName("ATMB_AJ", FALSE);
+	if(ucRet==MAX_ACQ)
 		return;
-	}
+
+	SetCurAcq(ucRet);
+	
 	strcpy(glProcInfo.stTranLog.szKodeProduk,kodeProduk);
 	strcpy(glProcInfo.stTranLog.szKodePpob,codeppob);
 	strcpy(glProcInfo.stTranLog.szProvider,provider);
@@ -3378,6 +3395,13 @@ int TransPurchaseItem(uchar * kodeProduk, uchar * codeppob, uchar * provider)
 	{
 		return iRet;
 	}
+
+	ucRet = FindAcqIdxByName("ATMB_AJ", FALSE);
+	if(ucRet==MAX_ACQ)
+		return;
+
+	SetCurAcq(ucRet);
+	
 
 		ScrCls();
 		DispTransName();
