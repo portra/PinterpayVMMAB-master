@@ -38,6 +38,7 @@ uchar unPackRenewalKartu(void);
 uchar unPackRegTrxPBTransfer(void);
 uchar unPackSSB(void);
 
+
 // DIKI ADD FOR MINI ATM BUKOPIN
 
 uchar unPackTransfer_AntarBankBkpn(void);
@@ -56,9 +57,6 @@ uchar unPackPembayaran_SelularBkpn(void);
 uchar unPackPembayaran_PdamBkpn(void);
 
 uchar unPackSetorTunaiBankBkpn(void);
-
-
-
 
 
 

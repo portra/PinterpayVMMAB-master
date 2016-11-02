@@ -2816,7 +2816,7 @@ void CalcMiniAtmTotal(void *TotalInfo, ushort *TotalCnt, uchar *TotalAmt, uchar 
 				
 
 			case TRANS_TYPE_AJ_PAY:
-				idx=46;
+				idx=47;
 				if((((MINIATM_TOTAL_INFO*)TotalInfo)[idx]).uiTotalCnt==0)
 					strcpy((((MINIATM_TOTAL_INFO*)TotalInfo)[idx]).szNamaFitur, "PURCHASE ATMB");
 

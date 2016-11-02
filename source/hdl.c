@@ -2052,7 +2052,7 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 
 				case mnuKodeBankBkpn:
 	  				//TransInfoKodeBankBkpn();
-					//xx TransInfoKodeBankBkpn2();
+					TransInfoKodeBankBkpn2();
 					break;
 
 				case mnuInfoTransaksiBkpn:

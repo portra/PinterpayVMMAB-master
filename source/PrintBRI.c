@@ -2189,6 +2189,7 @@ void PrnPembTelkom(void)
 	uchar		printOperator[48+1];
 	uchar		printNama[48+1];
 	uchar		printTagihan[48+1];
+	uchar		printBulanTahun[48+1];
 
 	//uchar	NoRef[48+1];
 	//uchar	NoCard[48+1];
@@ -2198,8 +2199,11 @@ void PrnPembTelkom(void)
 	char szBuf1[50+1];
 	char szBuff2[50+1];
 
+	MEM_ZERO(printBulanTahun);
+
 	PrnSetNormal();
 
+	/*
 	PrnStr("\n");
 	MEM_ZERO(NoRek);
 	sprintf((char *)NoRek,         "N0 REKENING   : %s\n", glProcInfo.stTranLog.BRI.PEMB_TELKOM.NoRek);
@@ -2209,32 +2213,52 @@ void PrnPembTelkom(void)
 	memset(szBuff2, 0, sizeof(szBuff2));
 	memset(szBuf1, 0, sizeof(szBuf1));
 	strcpy((char *)szBuff2, (char *)glProcInfo.stTranLog.szPan);
-	sprintf((char *)szBuf1,        "NO KARTU      : %s", szBuff2);
+	sprintf((char *)szBuf1,        "NO KARTU       : %s", szBuff2);
 	MultiLngPrnStr(szBuf1, DISP_LINE_LEFT);
+	*/
 
 	PrnStr("\n");
 	MEM_ZERO(szBuffReff);
-	sprintf((char *)szBuffReff,    "REF NO        : %12s", glProcInfo.stTranLog.szRRN);
+	sprintf((char *)szBuffReff,    "REF NO         : %12s", glProcInfo.stTranLog.szRRN);
 	MultiLngPrnStr(szBuffReff, DISP_LINE_LEFT);
 
 	
 	PrnSetNormal();
 	PrnStr("\n");
 	MEM_ZERO(szBuff);
-	sprintf((char *)szBuff,        "ID/NOMOR TELEPON : %s\n", glProcInfo.stTranLog.BRI.PEMB_TELKOM.NoTelepon);
+	sprintf((char *)szBuff,        "ID/NO TELEPON  : %s", glProcInfo.stTranLog.BRI.PEMB_TELKOM.NoTelepon);
 	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
 
 	PrnStr("\n");
 	MEM_ZERO(szBuff);
-	sprintf((char *)szBuff,        "NAMA             : %s\n", glProcInfo.stTranLog.BRI.PEMB_TELKOM.Nama);
+	sprintf((char *)szBuff,        "NAMA           : %s", glProcInfo.stTranLog.BRI.PEMB_TELKOM.Nama);
 	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
 
+	PrnStr("\n");
+	MEM_ZERO(szBuff);
+	sprintf((char *)szBuff,        "BULAN/TAHUN    : %s", glProcInfo.stTranLog.BRI.PEMB_TELKOM.PayPeriod);
+	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
+
+
+	PrnStr("\n");
+	MEM_ZERO(szBuff);
+	sprintf((char *)szBuff,        "JUMLAH TAGIHAN : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_TELKOM.Total);
+	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
+
+	PrnStr("\n");
+	MEM_ZERO(szBuff);
+	sprintf((char *)szBuff,        "JUMLAH DIBAYAR : Rp. %s\n", glProcInfo.stTranLog.BRI.PEMB_TELKOM.Total);
+	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
+	
+
+	/*
 	PrnStr("\n");
 	MEM_ZERO(szBuff);
 	MEM_ZERO(PrintBuff);
 	App_ConvAmountTran(glProcInfo.stTranLog.szAmount, PrintBuff, GA_SEPARATOR);
 	sprintf((char *)szBuff,        "JUMLAH TAGIHAN   : %s\n", PrintBuff);
 	MultiLngPrnStr(szBuff, DISP_LINE_LEFT);
+	*/
 	
 	//PrnStr("\n");
 	//MultiLngPrnStr("BRI menyatakan struk ini sebagai", DISP_LINE_CENTER);
@@ -2285,6 +2309,8 @@ void PrnPascaBayarMatrix(void)
 	uchar		printOperator[48+1];
 	uchar		printNama[48+1];
 	uchar		printTagihan[48+1];
+	uchar		printPembayaran[48+1];
+	uchar		printBulanTahun[48+1];
 
 	uchar		printProvider[48+1];
 
@@ -2297,36 +2323,40 @@ void PrnPascaBayarMatrix(void)
 	char szBuf1[50+1];
 	char szBuff[50+1];
 
+	MEM_ZERO(printBulanTahun);
+
 	MEM_ZERO(printProvider);
 	PrnStr("\n");
-	sprintf((char *)printProvider, "PROVIDER      : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Provider);
+	sprintf((char *)printProvider, "PROVIDER        : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Provider);
 
 	
 	MEM_ZERO(NoRek);
-	sprintf((char *)NoRek,         "N0 REKENING   : %s\n", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoRek);
+	sprintf((char *)NoRek,         "N0 REKENING     : %s\n", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoRek);
 	
 	memset(szBuff, 0, sizeof(szBuff));
 	memset(szBuf1, 0, sizeof(szBuf1));
 	//strcpy((char *)szBuff, (char *)glProcInfo.stTranLog.szPan);
 	//sprintf((char *)szBuf1,        "NO KARTU      : %s", szBuff);
 	memcpy(szBuff,glProcInfo.stTranLog.szPan,12);
-	sprintf((char *)szBuf1,        "NO KARTU      : %s****", szBuff);
+	sprintf((char *)szBuf1,        "NO KARTU        : %s****", szBuff);
 
 	MEM_ZERO(szBuffReff);
-	sprintf((char *)szBuffReff,    "REF NO        : %12s", glProcInfo.stTranLog.szRRN);
+	sprintf((char *)szBuffReff,    "REF NO          : %12s", glProcInfo.stTranLog.szRRN);
 
-	sprintf((char *)printOperator, "ID PELANGGAN  : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoHP);		
-	sprintf((char *)printNama,     "NAMA          : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Nama);
-	sprintf((char *)printTagihan,  "NILAI TAGIHAN : Rp.%s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Total);
+	sprintf((char *)printOperator,    "ID PELANGGAN    : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoHP);		
+	sprintf((char *)printNama,        "NAMA            : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Nama);
+	sprintf((char *)printBulanTahun,  "BULAN/TAHUN     : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.PayPeriod);
+	sprintf((char *)printTagihan,     "JUMLAH TAGIHAN  : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Total);
+	sprintf((char *)printPembayaran,  "JUMLAH DIBAYAR  : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Total);
 
 
 	PrnSetNormal();
 	PrnStr("\n");
 	MultiLngPrnStr(printProvider,DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(szBuffReff,DISP_LINE_LEFT);
 	//PrnStr("\n");
@@ -2337,7 +2367,11 @@ void PrnPascaBayarMatrix(void)
 	PrnStr("\n");
 	MultiLngPrnStr(printNama, DISP_LINE_LEFT);
 	PrnStr("\n");
+	MultiLngPrnStr(printBulanTahun, DISP_LINE_LEFT);
+	PrnStr("\n");
 	MultiLngPrnStr(printTagihan, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(printPembayaran, DISP_LINE_LEFT);
 	PrnStr("\n\n");
 
 	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)==0 )
@@ -2625,24 +2659,24 @@ void PrnKK_KTA(void)
 	MEM_ZERO(Nama);
 	sprintf((char *)Nama,         "NAMA          : %s", glProcInfo.stTranLog.BRI.PEMB_KK_KTA.NamaCust);
 	
-	sprintf((char *)printnoKK,    "NOMOR KK      : %s", glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Nomor);
-	sprintf((char *)printJumlah,  "NOMINAL       : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Tagihan);
+	sprintf((char *)printnoKK,    "NOMOR KARTU KREDIT : %s", glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Nomor);
+	sprintf((char *)printJumlah,  "JUMLAH TAGIHAN     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Tagihan);
 
 	PrnSetBig();
 	MultiLngPrnStr(glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Nama, DISP_LINE_LEFT);
 	PrnStr("\n");
 
-	PrnSetNormal();
-	PrnStr("\n");
-	MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(szBuffReff,DISP_LINE_LEFT);
+	//PrnSetNormal();
+	//PrnStr("\n");
+	//MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(szBuffReff,DISP_LINE_LEFT);
 	
 	PrnSetNormal();
-	PrnStr("\n");
-	MultiLngPrnStr(Nama,DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(Nama,DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(printnoKK, DISP_LINE_LEFT);
 	PrnStr("\n");
@@ -2667,64 +2701,148 @@ void PrnCicilan(void)
 	char szBuf1[50+1];
 	char szBuff[50+1];
 
+
+	uchar		billid[48+1];
+	uchar		name[48+1];
+	uchar		ptname[48+1];
+	uchar		branchname[48+1];
+	uchar		serialnumber[48+1];
+	uchar		norangka[48+1];
+	uchar		merkkendaraan[48+1];
+	uchar		tenor[48+1];
+	uchar		sisaangsuran[48+1];
+	uchar		noangsuran[48+1];
+	uchar		jatuhtempo[48+1];
+	uchar		nilaitagihan[48+1];
+	uchar		nilaiangsuran[48+1];
+	uchar		nilaidenda[48+1];
+	uchar		nilaiadmin[48+1];
+	uchar		nilailainnya[48+1];
+	uchar		referencenumber[48+1];
+
+	uchar		sisaangsuranFmt[48+1];
+	uchar		nilaitagihanFmt[48+1];
+	uchar		nilaiangsuranFmt[48+1];
+	uchar		nilaidendaFmt[48+1];
+
+	uchar		nilaiadminFmt[48+1];
+	uchar		nilailainnyaFmt[48+1];
+
+	uchar		totalPembayaran[48+1];
+	uchar		totalPembayaranFmt[48+1];
+
+	MEM_ZERO(billid);
+	MEM_ZERO(name);
+	MEM_ZERO(ptname);
+	MEM_ZERO(branchname);
+	MEM_ZERO(serialnumber);
+	MEM_ZERO(norangka);
+	MEM_ZERO(merkkendaraan);
+	MEM_ZERO(tenor);
+	MEM_ZERO(sisaangsuran);
+	MEM_ZERO(noangsuran);
+	MEM_ZERO(jatuhtempo);
+	MEM_ZERO(nilaitagihan);
+	MEM_ZERO(nilaiangsuran);
+	MEM_ZERO(nilaidenda);
+	MEM_ZERO(referencenumber);
+	
+	MEM_ZERO(nilaitagihanFmt);
+	MEM_ZERO(nilaiangsuranFmt);
+	MEM_ZERO(nilaidendaFmt);
+	MEM_ZERO(sisaangsuranFmt);
+
+	MEM_ZERO(nilaiadmin);
+	MEM_ZERO(nilailainnya);
+	MEM_ZERO(nilaiadminFmt);
+	MEM_ZERO(nilailainnyaFmt);
+
+	MEM_ZERO(totalPembayaran);
+	MEM_ZERO(totalPembayaranFmt);
+
+	
+	sprintf((char *)billid,         "No Kontrak   : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.billid);
+	sprintf((char *)name,           "Nama Konsumen: %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.name);
+	sprintf((char *)ptname,         "Nama PT      : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.ptname);
+	sprintf((char *)branchname,     "Cabang       : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.branchname);
+	sprintf((char *)serialnumber,   "No Polisi    : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.serialnumber);
+	sprintf((char *)norangka,       "No Rangka    : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.norangka);
+	sprintf((char *)merkkendaraan,  "Merk         : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.merkkendaraan);
+	sprintf((char *)tenor,          "Tenor        : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.tenor);
+	sprintf((char *)sisaangsuran,   "Sisa Angsuran: Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.sisaangsuran);
+	sprintf((char *)noangsuran,     "No Angsuran  : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.noangsuran);
+	sprintf((char *)jatuhtempo,     "Jatuh Tempo  : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.jatuhtempo);
+	sprintf((char *)nilaitagihan,   "Tagihan      : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaitagihan);
+	sprintf((char *)nilaiangsuran,  "Angsuran     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaiangsuran);
+	sprintf((char *)nilaidenda,     "Denda        : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaidenda);
+	sprintf((char *)nilaiadmin,     "Admin        : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaiadmin);
+	sprintf((char *)nilailainnya,   "Lainnya      : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilailainnya);
+	sprintf((char *)totalPembayaran,"Total Tagihan: Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.TotalPembayaran);
+
+	
+
 	
 	MEM_ZERO(NoRek);
-	sprintf((char *)NoRek,        "N0 REKENING   : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.NoRek);
+	sprintf((char *)NoRek,          "N0 REKENING  : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.NoRek);
 	
 	memset(szBuff, 0, sizeof(szBuff));
 	memset(szBuf1, 0, sizeof(szBuf1));
 	//strcpy((char *)szBuff, (char *)glProcInfo.stTranLog.szPan);
 	//sprintf((char *)szBuf1, "NO KARTU  : %s", szBuff);
 	memcpy(szBuff,glProcInfo.stTranLog.szPan,12);
-	sprintf((char *)szBuf1,       "NO KARTU      : %s****", szBuff);
+	sprintf((char *)szBuf1,         "NO KARTU     : %s****", szBuff);
 
 	MEM_ZERO(szBuffReff);
-	sprintf((char *)szBuffReff,   "NO REF        : %12s", glProcInfo.stTranLog.szRRN);
+	sprintf((char *)szBuffReff,     "NO REF       : %12s", glProcInfo.stTranLog.szRRN);
 	
-	
-	sprintf((char *)printNoKontrak, "No Kontrak     : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.NoKontrak);		
-	sprintf((char *)printNama, "Nama           : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.Nama);	
-	sprintf((char *)printJatuhTempo, "Jatuh Tempo    : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.JatuhTempo);
-	sprintf((char *)printAngsuran, "Angsuran       : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.Angsuran);
-	sprintf((char *)printTagihan, "Tagihan        : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.Tagihan);
-	sprintf((char *)printTotalBayar, "Pembayaran     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.Total);
-	sprintf((char *)printMLPO, "Ref       : %s", glProcInfo.stTranLog.BRI.PEMB_CICILAN.MLPO);
-	sprintf((char *)printFooter,"%s MENYATAKAN TANDA TERIMA INI", glTranConfig[glProcInfo.stTranLog.ucTranType].szLabel);
-
-	PrnSetBig();
-	MultiLngPrnStr(glProcInfo.stTranLog.BRI.PEMB_CICILAN.Tampilan, DISP_LINE_LEFT);
-	PrnStr("\n");
-
 
 	PrnSetNormal();
+	/*
 	PrnStr("\n");
 	MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(szBuffReff,DISP_LINE_LEFT);
-	
+	*/
 	
 	PrnSetNormal();
 	PrnStr("\n");
-	MultiLngPrnStr(printNoKontrak, DISP_LINE_LEFT);
+	MultiLngPrnStr(billid, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printNama, DISP_LINE_LEFT);
+	MultiLngPrnStr(name, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printJatuhTempo, DISP_LINE_LEFT);
+	MultiLngPrnStr(ptname, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printAngsuran, DISP_LINE_LEFT);
+	MultiLngPrnStr(branchname, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printTagihan, DISP_LINE_LEFT);
+	MultiLngPrnStr(serialnumber, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printTotalBayar, DISP_LINE_LEFT);
+	MultiLngPrnStr(norangka, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printMLPO, DISP_LINE_LEFT);
+	MultiLngPrnStr(merkkendaraan, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(tenor, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(sisaangsuran, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(noangsuran, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(jatuhtempo, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(nilaitagihan, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(nilaiangsuran, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(nilaidenda, DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(nilaiadmin, DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(nilailainnya, DISP_LINE_LEFT);
 	PrnStr("\n\n");
-	MultiLngPrnStr(printFooter, DISP_LINE_CENTER);
-	PrnStr("\n");
-	MultiLngPrnStr("SEBAGAI BUKTI PEMBAYARAN YANG SAH", DISP_LINE_CENTER);
-	PrnStr("\n");
+	MultiLngPrnStr(totalPembayaran, DISP_LINE_LEFT);
+	PrnStr("\n\n");
+	
 }
 
 void PrnPembZakat(void)
@@ -2988,6 +3106,8 @@ void PrnIsiUlang(void)
 	uchar	printNominal[48+1];
 	uchar	printPulsa[48+1];
 
+	uchar	printOperator[48+1];
+
 	uchar	NoRef[48+1];
 	uchar	NoCard[48+1];
 	uchar	NoRek[48+1];
@@ -2996,6 +3116,10 @@ void PrnIsiUlang(void)
 	uchar szBuffReff[50+1];	
 	char szBuf1[50+1];
 	char szBuff[50+1];
+
+
+	MEM_ZERO(printOperator);
+	sprintf((char *)printOperator, "%s\n", glProcInfo.stTranLog.BRI.ISIULANG.OperatorProvider);
 
 	
 	MEM_ZERO(NoRek);
@@ -3009,17 +3133,20 @@ void PrnIsiUlang(void)
 	sprintf((char *)szBuf1,       "NO KARTU    : %s****", szBuff);
 
 	MEM_ZERO(szBuffReff);
-	sprintf((char *)szBuffReff,   "REF NO      : %12s", glProcInfo.stTranLog.szRRN);
+	sprintf((char *)szBuffReff,   "NO REF      : %12s", glProcInfo.stTranLog.szRRN);
 	
 	sprintf((char *)printnoHP,    "NO HP       : %s", glProcInfo.stTranLog.BRI.ISIULANG.NoHP);
-	sprintf((char *)printNominal, "TOTAL BAYAR : Rp. %s", glProcInfo.stTranLog.BRI.ISIULANG.Nominal);
+	sprintf((char *)printNominal, "HARGA       : Rp. %s", glProcInfo.stTranLog.BRI.ISIULANG.Nominal);
 	sprintf((char *)printPulsa,   "PULSA       : Rp. %s", glProcInfo.stTranLog.BRI.ISIULANG.Pulsa);
+
+	PrnSetBig();
+	MultiLngPrnStr(printOperator,DISP_LINE_LEFT);
 	
 	PrnSetNormal();
 	PrnStr("\n");
 	MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
+	//PrnStr("\n");
+	//MultiLngPrnStr(NoRek,DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(szBuffReff,DISP_LINE_LEFT);
 	PrnStr("\n");
@@ -3028,7 +3155,7 @@ void PrnIsiUlang(void)
 	//MultiLngPrnStr(printNominal, DISP_LINE_LEFT);
 	MultiLngPrnStr(printPulsa, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr("ADMIN    : Rp 0", DISP_LINE_CENTER);
+	MultiLngPrnStr(               "BIAYA ADMIN : Rp. 0", DISP_LINE_LEFT);
 	PrnStr("\n");
 	//MultiLngPrnStr(printPulsa, DISP_LINE_LEFT);
 	MultiLngPrnStr(printNominal, DISP_LINE_LEFT);
@@ -3040,8 +3167,9 @@ void PrnIsiUlang(void)
 	///PrnStr("\n\n");
 	///MultiLngPrnStr("Transaksi Berhasil", DISP_LINE_CENTER);
 	PrnStr("\n\n");
-	PrnStr("\n");
-	MultiLngPrnStr("PULSA ANDA AKAN TERISI OTOMATIS", DISP_LINE_CENTER);
+	//PrnStr("\n");
+	//MultiLngPrnStr("PULSA ANDA AKAN TERISI OTOMATIS", DISP_LINE_CENTER);
+	//PrnStr("\n");
 	MultiLngPrnStr("HARAP TANDA TERIMA INI DISIMPAN", DISP_LINE_CENTER);
 	PrnStr("\n");
 	MultiLngPrnStr("SEBAGAI BUKTI TRANSAKSI YANG SAH", DISP_LINE_CENTER);
@@ -3206,14 +3334,23 @@ void PrnHeaderTidMid(void)
 {
 	char szTID[48+1];
 	char szMID[48+1];
+	char szTID2[48+1];
+	char szMID2[48+1];
 	
 	PrnSetNormal();
 	MEM_ZERO(szTID);
 	MEM_ZERO(szMID);
+	MEM_ZERO(szTID2);
+	MEM_ZERO(szMID2);
+
+	memcpy(szTID2,glCurTlmTmsAcq.acqTID,4);
+	memcpy(szMID2,glCurTlmTmsAcq.acqMID,11);
 
 #ifdef	__TELIUM_PARAM__
-	sprintf(szTID,"TERMINAL ID :                           %s",glCurTlmTmsAcq.acqTID);
-	sprintf(szMID,"MERCHANT ID :                    %s",glCurTlmTmsAcq.acqMID);
+	//sprintf(szTID,"TERMINAL ID :                           %s",glCurTlmTmsAcq.acqTID);
+	//sprintf(szMID,"MERCHANT ID :                    %s",glCurTlmTmsAcq.acqMID);
+	sprintf(szTID,"TERMINAL ID :                           %s****",szTID2);
+	sprintf(szMID,"MERCHANT ID :                    %s****",szMID2);
 #else
 	sprintf(szTID,"TERMINAL ID :                           %s",glCurAcq.acqTID);
 	sprintf(szMID,"MERCHANT ID :                    %s",glCurAcq.acqMID);
@@ -3348,15 +3485,15 @@ void PrnFooterTrfSesamaBRI(void)
 
 void PrnFooterKK_KTA(void)
 {	
-	MultiLngPrnStr("Harap struk ini disimpan sebagai bukti", DISP_LINE_CENTER);
+	PrnSetNormal();
+	///PrnStr("\n\n");
+	///MultiLngPrnStr("Transaksi Berhasil", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("HARAP TANDA TERIMA INI DISIMPAN", DISP_LINE_CENTER);
 	PrnStr("\n");
-	MultiLngPrnStr("pembayaran yang sah.", DISP_LINE_CENTER);
-	PrnStr("\n");
-	//MultiLngPrnStr("Segala kesalahan input menjadi tanggung", DISP_LINE_CENTER);
-	//PrnStr("\n");
-	//MultiLngPrnStr("jawab nasabah.", DISP_LINE_CENTER);
-	//PrnStr("\n\n");
-	MultiLngPrnStr("*** Terima Kasih ***", DISP_LINE_CENTER);
+	MultiLngPrnStr("SEBAGAI BUKTI TRANSAKSI YANG SAH", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("******* Terima Kasih *******", DISP_LINE_CENTER);
 	PrnStr("\n");
 }
 
@@ -3758,6 +3895,7 @@ void PrnTrfAntarBankBkpn(void)
 	uchar	printNamaPenerima[48+1];
 	uchar	printNoRekPenerima[48+1];
 	uchar	printNoRefPenerima[48+1];
+	byte	  jenisRekening;
 
 	uchar szBuffRef[50+1];
 
@@ -3782,7 +3920,7 @@ void PrnTrfAntarBankBkpn(void)
 	sprintf((char *)printNoRekPenerima, "REKENING TUJUAN : %s", glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPenerima);
 	sprintf((char *)printNamaPenerima,  "NAMA PENERIMA   : %s", glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NamaPenerima);
 	//sprintf((char *)printNoRefPenerima,  "NoRef  : %s", glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRefPenerima);
-	sprintf((char *)printTotal,         "NILAI TRANSFER  : Rp.%s", glProcInfo.stTranLog.BRI.TRF_ANTARBANK.Total);
+	sprintf((char *)printTotal,         "NILAI TRANSFER  : Rp. %s", glProcInfo.stTranLog.BRI.TRF_ANTARBANK.Total);
 
 	
 	PrnSetBig();
@@ -3811,16 +3949,29 @@ void PrnTrfAntarBankBkpn(void)
 
 	//PrnSetNormal();
 	//MultiLngPrnStr("REKENING TUJUAN", DISP_LINE_LEFT);
-	
-	//PrnSetNormal();
-	PrnStr("\n");
-	MultiLngPrnStr(printBankPenerima, DISP_LINE_LEFT);
+
 	PrnStr("\n");
 	MultiLngPrnStr(printNoRekPenerima, DISP_LINE_LEFT);
+	
+	//PrnSetNormal();
+	//PrnStr("\n");
+	//MultiLngPrnStr(printBankPenerima, DISP_LINE_LEFT);
+	mapGetByte(traSumberRek, jenisRekening);
+	switch(jenisRekening)
+		{
+			case 1:
+				break;
+			case 2:
+				PrnStr("\n");
+				MultiLngPrnStr(printBankPenerima, DISP_LINE_LEFT);
+				break;
+		}
+	
+	
 	PrnStr("\n");
 	MultiLngPrnStr(printNamaPenerima, DISP_LINE_LEFT);
 	PrnStr("\n");
-	PrnStr("\n");
+	//PrnStr("\n");
 	//MultiLngPrnStr(printNoRefPenerima, DISP_LINE_LEFT);
 	//PrnStr("\n");
 	//PrnSetBig();
@@ -4270,18 +4421,125 @@ void PrnPdamPalyjaBkpn(void)
 	uchar		printNama[48+1];
 	uchar		printTagihan[48+1];
 
-	sprintf((char *)printOperator, "NO ID PALYJA   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.BillId);		
-	sprintf((char *)printNama, "Nama           : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.CustName);
-	sprintf((char *)printTagihan, "Jumlah Tagihan : Rp.%s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance);
+	uchar		PrintNoKartu[48+1];
+	uchar		PrintNoRek[48+1];
+	uchar		PrintNoID[48+1];
+	uchar		PrintNama[48+1];
+	uchar		PrintJumlahTag[48+1];
+	uchar		PrintPeriode[48+1];
+	uchar		PrintKubikasi[48+1];
+	uchar		PrintRefNum[48+1];
+	uchar		PrintAdminFee[48+1];
+	uchar		PrintOtherFee[48+1];
+	uchar		PrintPinalty[48+1];
+	uchar		PrintTax[48+1];
+	uchar		PrintTotalTag[48+1];
+	uchar		PrintTotalBayar[48+1];
+
+
+	uchar	NoRek[48+1];	
+	char szBuf1[20+1];
+	char szBuff[20+1];
+
+/*
+	uchar	ProductId[4+1];
+	uchar	BillId[20+1];
+	uchar	CustName[30+1];
+	uchar	NumOfBill[1+1];
+	uchar	PayBallance[20+1];
+	uchar	PayPeriod[20+1];
+	uchar	PayPenalti[20+1];
+	uchar	PayTax[20+1];
+	uchar	TotalBayar[20+1];
+	uchar   NoRekAsal[30+1];
+	uchar   AdminFee[20+1];
+	uchar   OtherFee[20+1];
+	uchar   Kubikasi[20+1];
+	*/
+
+	/*
+		uchar	ProductId[4+1];
+	uchar	BillId[20+1];
+	uchar	CustName[30+1];
+	uchar	NumOfBill[1+1];
+	uchar	PayBallance[20+1];
+	uchar	PayPeriod[20+1];
+	uchar	PayPenalti[20+1];
+	uchar	PayTax[20+1];
+	uchar	TotalBayar[20+1];
+	uchar   NoRekAsal[30+1];
+	*/
+
+	MEM_ZERO(printNama);
+	MEM_ZERO(PrintRefNum);
+
+
+
+
+	//sprintf((char *)PrintNoKartu, 	"NO KARTU      :");
+	//sprintf((char *)PrintNoRek, 	"NO REKENING   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.NoRekAsal);
+	sprintf((char *)PrintNoID,   	"N0 REKENING   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.BillId);
+	//sprintf((char *)PrintNama, 		"NAMA          : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.CustName);
+	sprintf((char *)PrintJumlahTag, "JMLH TAGIHAN  : 1");
+	sprintf((char *)PrintPeriode, 	"PERIODE       : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPeriod);
+	sprintf((char *)PrintKubikasi, 	"KUBIKASI      : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.Kubikasi);
+	sprintf((char *)PrintRefNum, 	"REFF NUMBER   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.ReffNum);
+	sprintf((char *)PrintAdminFee, 	"ADMIN FEE     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.AdminFee);
+	sprintf((char *)PrintOtherFee, 	"OTHER FEE     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.OtherFee);
+	sprintf((char *)PrintPinalty, 	"PINALTY       : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPenalti);
+	sprintf((char *)PrintTax, 		"TAX           : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayTax);
+	sprintf((char *)PrintTotalTag, 	"TAGIHAN       : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance);
+	sprintf((char *)PrintTotalBayar,"TOTAL BAYAR   : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.TotalBayar);
+
+	
+
+	//sprintf((char *)printOperator, "NO ID PALYJA   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.BillId);		
+	sprintf((char *)printNama,      "NAMA          : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.CustName);
+	//sprintf((char *)printTagihan,  "Jumlah Tagihan : Rp.%s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance);
+
+
+	MEM_ZERO(NoRek);
+	//sprintf((char *)NoRek,          "N0 REKENING   : %s\n", glProcInfo.stTranLog.BRI.PEMB_PDAM.NoRekAsal);
+	memset(szBuff, 0, sizeof(szBuff));
+	memset(szBuf1, 0, sizeof(szBuf1));
+	memcpy(szBuff,glProcInfo.stTranLog.szPan,12);
+	sprintf((char *)szBuf1,         "NOMOR KARTU   : %s****", szBuff);
+
+	
 	
 	PrnSetNormal();
+	//PrnStr("\n");
+	//MultiLngPrnStr(NoRek, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printOperator, DISP_LINE_LEFT);
+	MultiLngPrnStr(szBuf1, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintNoID, DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(printNama, DISP_LINE_LEFT);
 	PrnStr("\n");
-	MultiLngPrnStr(printTagihan, DISP_LINE_LEFT);
-	PrnStr("\n\n");
+	MultiLngPrnStr(PrintJumlahTag, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintPeriode, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintKubikasi, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintRefNum, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintAdminFee, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintOtherFee, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintPinalty, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintTax, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintTotalTag, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(PrintTotalBayar, DISP_LINE_LEFT);
+	PrnStr("\n\n\n");
+
+
+
 
 
 	/*
@@ -4301,30 +4559,134 @@ void PrnPdamPalyjaBkpn(void)
 		}
 	*/
 
-	MultiLngPrnStr("PEMBAYARAN BERHASIL", DISP_LINE_CENTER);
-	PrnStr("\n\n");
+	//MultiLngPrnStr("PEMBAYARAN BERHASIL", DISP_LINE_CENTER);
+	//PrnStr("\n\n");
 }
 
 
 
 void PrnPdamAetraBkpn(void)
 {
-	uchar		printOperator[48+1];
-	uchar		printNama[48+1];
-	uchar		printTagihan[48+1];
-
-	sprintf((char *)printOperator, "NO ID AETRA : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoHP);		
-	sprintf((char *)printNama, "Nama           : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Nama);
-	sprintf((char *)printTagihan, "Jumlah Tagihan : Rp.%s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Total);
 	
-	PrnSetNormal();
-	PrnStr("\n");
-	MultiLngPrnStr(printOperator, DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(printNama, DISP_LINE_LEFT);
-	PrnStr("\n");
-	MultiLngPrnStr(printTagihan, DISP_LINE_LEFT);
-	PrnStr("\n\n");
+	uchar		printOperator[48+1];
+		uchar		printNama[48+1];
+		uchar		printTagihan[48+1];
+	
+		uchar		PrintNoKartu[48+1];
+		uchar		PrintNoRek[48+1];
+		uchar		PrintNoID[48+1];
+		uchar		PrintNama[48+1];
+		uchar		PrintJumlahTag[48+1];
+		uchar		PrintPeriode[48+1];
+		uchar		PrintKubikasi[48+1];
+		uchar		PrintRefNum[48+1];
+		uchar		PrintAdminFee[48+1];
+		uchar		PrintOtherFee[48+1];
+		uchar		PrintPinalty[48+1];
+		uchar		PrintTax[48+1];
+		uchar		PrintTotalTag[48+1];
+		uchar		PrintTotalBayar[48+1];
+
+
+	uchar	NoRek[48+1];	
+	char szBuf1[50+1];
+	char szBuff[50+1];
+	
+	/*
+		uchar	ProductId[4+1];
+		uchar	BillId[20+1];
+		uchar	CustName[30+1];
+		uchar	NumOfBill[1+1];
+		uchar	PayBallance[20+1];
+		uchar	PayPeriod[20+1];
+		uchar	PayPenalti[20+1];
+		uchar	PayTax[20+1];
+		uchar	TotalBayar[20+1];
+		uchar	NoRekAsal[30+1];
+		uchar	AdminFee[20+1];
+		uchar	OtherFee[20+1];
+		uchar	Kubikasi[20+1];
+		*/
+	
+		/*
+			uchar	ProductId[4+1];
+		uchar	BillId[20+1];
+		uchar	CustName[30+1];
+		uchar	NumOfBill[1+1];
+		uchar	PayBallance[20+1];
+		uchar	PayPeriod[20+1];
+		uchar	PayPenalti[20+1];
+		uchar	PayTax[20+1];
+		uchar	TotalBayar[20+1];
+		uchar	NoRekAsal[30+1];
+		*/
+	
+	
+		//sprintf((char *)PrintNoKartu,	"NO KARTU      :");
+		//sprintf((char *)PrintNoRek, 	"NO REKENING   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.NoRekAsal);
+		sprintf((char *)PrintNoID,		"NO REKENING   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.BillId);
+		//sprintf((char *)PrintNama,		"NAMA          : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.CustName);
+		sprintf((char *)PrintJumlahTag, "JMLH TAGIHAN  : 1");
+		sprintf((char *)PrintPeriode,	"PERIODE       : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPeriod);
+		sprintf((char *)PrintKubikasi,	"KUBIKASI      : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.Kubikasi);
+		sprintf((char *)PrintRefNum,	"REFF NUMBER   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.ReffNum);
+		sprintf((char *)PrintAdminFee,	"ADMIN FEE     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.AdminFee);
+		sprintf((char *)PrintOtherFee,	"OTHER FEE     : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.OtherFee);
+		sprintf((char *)PrintPinalty,	"PINALTY       : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPenalti);
+		sprintf((char *)PrintTax,		"TAX           : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayTax);
+		sprintf((char *)PrintTotalTag,	"TAGIHAN       : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance);
+		sprintf((char *)PrintTotalBayar,"TOTAL BAYAR   : Rp. %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.TotalBayar);
+	
+		
+	
+		//sprintf((char *)printOperator, "NO ID AETRA   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.BillId);		
+		sprintf((char *)printNama,	    "NAMA          : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.CustName);
+		//sprintf((char *)printTagihan,  "Jumlah Tagihan : Rp.%s", glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance);
+
+		MEM_ZERO(NoRek);
+	//sprintf((char *)NoRek,              "N0 REKENING   : %s", glProcInfo.stTranLog.BRI.PEMB_PDAM.NoRekAsal);
+	memset(szBuff, 0, sizeof(szBuff));
+	memset(szBuf1, 0, sizeof(szBuf1));
+	memcpy(szBuff,glProcInfo.stTranLog.szPan,12);
+	sprintf((char *)szBuf1,             "NOMOR KARTU   : %s****", szBuff);
+
+	
+		
+		PrnSetNormal();
+		//PrnStr("\n");
+		//MultiLngPrnStr(NoRek, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(szBuf1, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintNoID, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(printNama, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintJumlahTag, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintPeriode, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintKubikasi, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintRefNum, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintAdminFee, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintOtherFee, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintPinalty, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintTax, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintTotalTag, DISP_LINE_LEFT);
+		PrnStr("\n");
+		MultiLngPrnStr(PrintTotalBayar, DISP_LINE_LEFT);
+		PrnStr("\n\n\n");
+	
+	
+	
+
+		
 
 
 	/*
@@ -4344,8 +4706,8 @@ void PrnPdamAetraBkpn(void)
 		}
 	*/
 
-	MultiLngPrnStr("PEMBAYARAN BERHASIL", DISP_LINE_CENTER);
-	PrnStr("\n\n");	
+	//MultiLngPrnStr("PEMBAYARAN BERHASIL", DISP_LINE_CENTER);
+	//PrnStr("\n\n");	
 }
 
 
@@ -4427,6 +4789,8 @@ void PrnSetorTunaiBkpn(void)
 	//uchar	NoCard[48+1];
 	uchar	NoRek[48+1];
 
+	uchar	NoRekTujuan[48+1];
+
 	
 	uchar szBuffReff[50+1];	
 	char szBuf1[50+1];
@@ -4438,7 +4802,7 @@ void PrnSetorTunaiBkpn(void)
 
 	
 	MEM_ZERO(NoRek);
-	sprintf((char *)NoRek,         "N0 REKENING   : %s\n", glProcInfo.stTranLog.BRI.SetorPasti.NoRekAsal);
+	sprintf((char *)NoRek,         "N0 REKENING ASAL   : %s", glProcInfo.stTranLog.BRI.SetorPasti.NoRekAsal);
 
 	/*
 	memset(szBuff, 0, sizeof(szBuff));
@@ -4448,12 +4812,14 @@ void PrnSetorTunaiBkpn(void)
 	*/
 
 	MEM_ZERO(szBuffReff);
-	sprintf((char *)szBuffReff,    "REF NO        : %12s", glProcInfo.stTranLog.szRRN);
+	sprintf((char *)szBuffReff,    "NO REFERENSI       : %12s", glProcInfo.stTranLog.szRRN);
 	
 
-	//sprintf((char *)printOperator, "NO HP         : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoHP);		
-	sprintf((char *)printNama,     "DEPOSIT       : Rp.%s", glProcInfo.stTranLog.BRI.SetorPasti.Setoran);
-	sprintf((char *)printTagihan,  "SALDO AKHIR   : Rp.%s", glProcInfo.stTranLog.BRI.SetorPasti.SaldoAkhir);
+	//sprintf((char *)printOperator, "NO HP         : %s", glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoHP);	
+	MEM_ZERO(NoRekTujuan);
+	sprintf((char *)NoRekTujuan,   "NO REKENING TUJUAN : %s", glProcInfo.stTranLog.BRI.SetorPasti.NoRekTujuan);
+	sprintf((char *)printNama,     "JUMLAH SETORAN     : Rp.%s", glProcInfo.stTranLog.BRI.SetorPasti.Setoran);
+	sprintf((char *)printTagihan,  "SALDO AKHIR        : Rp.%s", glProcInfo.stTranLog.BRI.SetorPasti.SaldoAkhir);
 
 
 	PrnSetNormal();
@@ -4473,6 +4839,8 @@ void PrnSetorTunaiBkpn(void)
 	PrnSetNormal();
 	//PrnStr("\n");
 	//MultiLngPrnStr(printOperator, DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(NoRekTujuan, DISP_LINE_LEFT);
 	PrnStr("\n");
 	MultiLngPrnStr(printNama, DISP_LINE_LEFT);
 	PrnStr("\n");
@@ -4499,6 +4867,81 @@ void PrnHeaderCardNumberBkpn(void)
 	
 	PrnSetNormal();
 	MultiLngPrnStr(szBufCard,DISP_LINE_LEFT);
+	PrnStr("\n");
+}
+
+
+void PrnGantiPinBkpn(void)
+{
+	uchar szBuffReff[50+1];	
+	char szBuf1[50+1];
+	char szBuff[50+1];
+
+	memset(szBuff, 0, sizeof(szBuff));
+	memset(szBuf1, 0, sizeof(szBuf1));
+	memcpy(szBuff,glProcInfo.stTranLog.szPan,12);
+	sprintf((char *)szBuf1,  "NOMOR KARTU  : %s****", szBuff);
+
+	PrnSetNormal();
+	PrnStr("\n");
+	PrnStr("\n");
+	MultiLngPrnStr(szBuf1,DISP_LINE_LEFT);
+	PrnStr("\n");
+	MultiLngPrnStr(          "TRANS        : UBAH PIN",DISP_LINE_LEFT);
+	PrnStr("\n");
+	//MultiLngPrnStr(printTagihan, DISP_LINE_LEFT);
+	//PrnStr("\n\n");
+
+	PrnSetNormal();
+	PrnStr("\n\n");
+	MultiLngPrnStr("MULAI SAAT INI ANDA DAPAT", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("MENGGUNAKAN NOMOR PIN", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("YANG BARU", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("******* Terima Kasih *******", DISP_LINE_CENTER);
+	PrnStr("\n");
+	
+
+}
+
+
+void PrnFooterInfoWomBkpn(void)
+{
+
+	PrnSetNormal();
+	///PrnStr("\n\n");
+	///MultiLngPrnStr("Transaksi Berhasil", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("Pembayaran angsuran terakhir harus", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("dilakukan dikantor cabang WOM Finance", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("dan wajib langsung mengambil BPKB", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("Contact Center WOM Finance", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("0804-1-123888", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("******* Terima Kasih *******", DISP_LINE_CENTER);
+	PrnStr("\n");
+}
+
+void PrnFooterInfoBafBkpn(void)
+{
+
+	PrnSetNormal();
+	///PrnStr("\n\n");
+	///MultiLngPrnStr("Transaksi Berhasil", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("BAF menyatakan resi ini sah", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("dan sudah termasuk biaya adm BAF", DISP_LINE_CENTER);
+	PrnStr("\n");
+	MultiLngPrnStr("sebesar Rp. 1.000", DISP_LINE_CENTER);
+	PrnStr("\n\n");
+	MultiLngPrnStr("******* Terima Kasih *******", DISP_LINE_CENTER);
 	PrnStr("\n");
 }
 

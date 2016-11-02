@@ -3376,6 +3376,9 @@ void PubShowTitle(uchar bClrScreen, uchar *pszTitle)
 		iLen = NUM_MAXZHCHARS;
 	}
 
+	// diki add for scm, hapus jam
+	memcpy(&pszTitle[11], "  SCM", 5); // add diki
+
     // Support right-to-left language
 	if (sg_stAppLibConfig.bStrFromRightToLeft)
 	{
