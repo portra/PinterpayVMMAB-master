@@ -1250,7 +1250,7 @@ uchar unPackTransfer_AntarBankBkpn(void)
 
 	//memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.BankPengirim, buffer1+30, 20);
 	//memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.BankPenerima, buffer1+20, 20);
-	memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NamaPenerima, buffer1+41, 30);
+	//memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NamaPenerima, buffer1+40, 30);
 
 
 	memcpy(buffer2, glRecvPack.szField102+2, 28);
@@ -1266,12 +1266,14 @@ uchar unPackTransfer_AntarBankBkpn(void)
 				memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPengirim, buffer2+2, 6);
 				strcat(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPengirim, "****");
 				memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPenerima, buffer3+2, 26);
+				memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NamaPenerima, buffer1+40, 30);
 				break;
 			case 2:
 				strcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.JenisRekening, "FUND TRANSFER");
 				memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPengirim, buffer2, 6);
 				strcat(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPengirim, "****");
 				memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NoRekPenerima, buffer3, 26);
+				memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.NamaPenerima, buffer1+41, 30);
 				break;
 		}
 
@@ -1470,9 +1472,43 @@ uchar unPackPembayaran_CicilanBkpn(void)
 	uchar buffAmt[12+1];
 
 	uchar buffer2[20+1];
+
+
+	uchar buffAmtsisaangsuran[12+1];
+	uchar buffAmtnilaitagihan[12+1];
+	uchar buffAmtnilaiangsuran[12+1];
+	uchar buffAmtnilaidenda[12+1];
+	uchar buffAmtnilaiadmin[12+1];
+	uchar buffAmtnilailainnya[12+1];
+	uchar buffAmtTotalBayar[12+1];
+
+	uchar buffAmtsisaangsuranFmt[20+1];
+	uchar buffAmtnilaitagihanFmt[20+1];
+	uchar buffAmtnilaiangsuranFmt[20+1];
+	uchar buffAmtnilaidendaFmt[20+1];
+	uchar buffAmtnilaiadminFmt[20+1];
+	uchar buffAmtnilailainnyaFmt[20+1];
+	uchar buffAmtTotalBayarFmt[20+1];
 	
 	MEM_ZERO(buffer);
 	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffer2);
+
+	MEM_ZERO(buffAmtsisaangsuran);
+	MEM_ZERO(buffAmtnilaitagihan);
+	MEM_ZERO(buffAmtnilaiangsuran);
+	MEM_ZERO(buffAmtnilaidenda);
+	MEM_ZERO(buffAmtnilaiadmin);
+	MEM_ZERO(buffAmtnilailainnya);
+	MEM_ZERO(buffAmtTotalBayar);
+
+	MEM_ZERO(buffAmtsisaangsuranFmt);
+	MEM_ZERO(buffAmtnilaitagihanFmt);
+	MEM_ZERO(buffAmtnilaiangsuranFmt);
+	MEM_ZERO(buffAmtnilaidendaFmt);
+	MEM_ZERO(buffAmtnilaiadminFmt);
+	MEM_ZERO(buffAmtnilailainnyaFmt);
+	MEM_ZERO(buffAmtTotalBayarFmt);
 
 	
 
@@ -1503,30 +1539,43 @@ uchar unPackPembayaran_CicilanBkpn(void)
 	fmtAmt(nilaiangsuranFmt,nilaiangsuran,0,",.");
 	fmtAmt(nilaidendaFmt,nilaidenda,0,",.");
 	*/
+	
 
-
-//////
 	mapGet(traResponseInq, buffer, 999);
 
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.NoKontrak,buffer+4,16);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.Nama,buffer+20,30);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.Angsuran,buffer+186,3);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.JatuhTempo,buffer+204,9);
-	//memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.JatuhTempo+2,"-",1);
-	//memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.JatuhTempo+3,buffer+79,2);
-	//memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.JatuhTempo+5,"-",1);
-	//memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.JatuhTempo+6,buffer+81,4);
-	
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.MLPO,buffer+249,32);
-	
-	memcpy(buffAmt,buffer+213,12);
-	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.Tagihan,buffAmt,0,",.");
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.Total,glProcInfo.stTranLog.BRI.PEMB_CICILAN.Tagihan,12);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.billid,buffer+4,16);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.name,buffer+20,30);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.ptname,buffer+50,25);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.branchname,buffer+75,30);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.serialnumber,buffer+105,14);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.norangka,buffer+119,25);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.merkkendaraan,buffer+144,30);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.tenor,buffer+186,3);
+	memcpy(buffAmtsisaangsuran,buffer+189,12);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.noangsuran,buffer+201,3);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.jatuhtempo,buffer+204,9);
+	memcpy(buffAmtnilaitagihan,buffer+213,12);
+	memcpy(buffAmtnilaiangsuran,buffer+225,12);
+	memcpy(buffAmtnilaidenda,buffer+237,12);
+	memcpy(buffAmtnilaiadmin,buffer+249,12);
+	memcpy(buffAmtnilailainnya,buffer+261,12);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.referencenumber,buffer+273,30);
 
+	memcpy(buffAmtTotalBayar, glRecvPack.szBit4, 10);
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.TotalPembayaran,buffAmtTotalBayar,0,",.");
+
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.sisaangsuran,buffAmtsisaangsuran,0,",.");
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaitagihan,buffAmtnilaitagihan,0,",.");
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaiangsuran,buffAmtnilaiangsuran,0,",.");
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaidenda,buffAmtnilaidenda,0,",.");
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilaiadmin,buffAmtnilaiadmin,0,",.");
+	fmtAmt(glProcInfo.stTranLog.BRI.PEMB_CICILAN.nilailainnya,buffAmtnilailainnya,0,",.");
+
+	
+	
 
 	MEM_ZERO(buffer2);
 	memcpy(buffer2, glRecvPack.szField102+2, 20);
-	//memcpy(glProcInfo.stTranLog.BRI.PEMB_KK_KTA.NoRek, buffer2+2, 20);
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_CICILAN.NoRek, buffer2+2, 6);
 	strcat(glProcInfo.stTranLog.BRI.PEMB_CICILAN.NoRek, "****");
 	
@@ -1550,6 +1599,10 @@ uchar unPackPembayaran_KKBkpn(void)
 
 	uchar buffer2[20+1];
 
+	uchar NoKK_KTA_AWAL[32+1];
+	uchar NoKK_KTA_AKHIR[32+1];
+	uchar NoKK_KTA_MASKING[32+1];
+
 	MEM_ZERO(buffer);
 	MEM_ZERO(buffAmt);
 	MEM_ZERO(buffAmtFmt);
@@ -1557,6 +1610,10 @@ uchar unPackPembayaran_KKBkpn(void)
 	MEM_ZERO(NoKK);
 	MEM_ZERO(NoKTA);
 	MEM_ZERO(bufferNama);
+
+	MEM_ZERO(NoKK_KTA_AWAL);
+	MEM_ZERO(NoKK_KTA_AKHIR);
+	MEM_ZERO(NoKK_KTA_MASKING);
 
 	mapGetWord(traMnuItm,mnuItm);
 
@@ -1587,8 +1644,15 @@ uchar unPackPembayaran_KKBkpn(void)
 
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_KK_KTA.NamaCust, buffer+16, 25);
 
-	memcpy(NoKK_KTA,glProcInfo.szReq103,17);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Nomor,NoKK_KTA,16);
+	//memcpy(NoKK_KTA,glProcInfo.szReq103,17);
+	//memcpy(glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Nomor,NoKK_KTA,16);
+	memcpy(NoKK_KTA,glProcInfo.szReq103,20);
+	memcpy(NoKK_KTA_AWAL,NoKK_KTA,6);
+	memcpy(NoKK_KTA_AKHIR,NoKK_KTA+12,8);	
+	memcpy(NoKK_KTA_MASKING,NoKK_KTA,6);
+	strcat(NoKK_KTA_MASKING, "******");
+	strcat(NoKK_KTA_MASKING, NoKK_KTA_AKHIR);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_KK_KTA.Nomor,NoKK_KTA_MASKING,20);
 
 	memcpy(buffAmt,glProcInfo.stTranLog.szAmount,10);
 	fmtAmt(buffAmtFmt,buffAmt,0,",.");
@@ -1609,11 +1673,23 @@ uchar unPackPembayaran_TelkomBkpn(void)
 	uchar buffer[999];
 	ulong len=0;
 	uchar buffAmt[12+1];
+	uchar buffAmtFmt[14+1];
 	uchar buffer2[20+1];
+
+	uchar   PayPeriodBulan[20+1];
+	uchar   PayPeriodTahun[20+1];
+	uchar   PayPeriodFmt[20+1];
+	uchar	PayPeriod[20+1];
 
 	MEM_ZERO(buffer);
 	MEM_ZERO(buffAmt);
 	MEM_ZERO(buffer2);
+	MEM_ZERO(buffAmtFmt);
+
+	MEM_ZERO(PayPeriodBulan);
+	MEM_ZERO(PayPeriodTahun);
+	MEM_ZERO(PayPeriodFmt);
+	MEM_ZERO(PayPeriod);
 
 	len = PubChar2Long(glRecvPack.szBit48, 2, NULL);
 	if(len == 0)
@@ -1625,16 +1701,24 @@ uchar unPackPembayaran_TelkomBkpn(void)
 	mapGet(traResponseInq, buffer, 999);
 	//memcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.Nama, buffer+67, 30);
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.Nama, buffer+15, 30); 
-	memcpy(glProcInfo.stTranLog.szAmount, glRecvPack.szBit4, 10);
-
-	fmtAmt(buffAmt,glProcInfo.stTranLog.szAmount,0,",.");
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.Total, buffAmt, 12);
+	memcpy(buffAmt, glRecvPack.szBit4, 10);
+	fmtAmt(buffAmtFmt,buffAmt,0,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.Total, buffAmtFmt, 14);
 
 	MEM_ZERO(buffer2);
 	memcpy(buffer2, glRecvPack.szField102+2, 20);
 	//memcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.NoRek, buffer2+2, 20);
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.NoRek, buffer2+2, 6);
 	strcat(glProcInfo.stTranLog.BRI.PEMB_TELKOM.NoRek, "****");
+
+
+	memcpy(PayPeriod, buffer+62, 6);
+	memcpy(PayPeriodBulan, PayPeriod+4, 2);
+	memcpy(PayPeriodTahun, PayPeriod, 4);
+	memcpy(PayPeriodFmt, PayPeriodBulan, 2);
+	strcat(PayPeriodFmt, " - ");
+	strcat(PayPeriodFmt, PayPeriodTahun);
+	strcpy(glProcInfo.stTranLog.BRI.PEMB_TELKOM.PayPeriod, PayPeriodFmt);
 
 	return TRUE;
 }
@@ -1649,10 +1733,20 @@ uchar unPackPembayaran_SelularBkpn(void)
 	uchar buffAmtFmt[12+1];
 	uchar buffer2[20+1];
 
+	uchar   PayPeriodBulan[20+1];
+	uchar   PayPeriodTahun[20+1];
+	uchar   PayPeriodFmt[20+1];
+	uchar	PayPeriod[20+1];
+
 	MEM_ZERO(buffer);
 	MEM_ZERO(buffAmt);
 	MEM_ZERO(buffAmtFmt);
 	MEM_ZERO(buffer2);
+
+	MEM_ZERO(PayPeriodBulan);
+	MEM_ZERO(PayPeriodTahun);
+	MEM_ZERO(PayPeriodFmt);
+	MEM_ZERO(PayPeriod);
 
 	len = PubChar2Long(glRecvPack.szBit48, 2, NULL);
 	if(len == 0)
@@ -1675,6 +1769,15 @@ uchar unPackPembayaran_SelularBkpn(void)
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoRek, buffer2+2, 6);
 	strcat(glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoRek, "****");
 
+
+	memcpy(PayPeriod, buffer+62, 6);
+	memcpy(PayPeriodBulan, PayPeriod+4, 2);
+	memcpy(PayPeriodTahun, PayPeriod, 4);
+	memcpy(PayPeriodFmt, PayPeriodBulan, 2);
+	strcat(PayPeriodFmt, " - ");
+	strcat(PayPeriodFmt, PayPeriodTahun);
+	strcpy(glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.PayPeriod, PayPeriodFmt);
+
 	return TRUE;
 }
 
@@ -1686,14 +1789,59 @@ uchar unPackPembayaran_PdamBkpn(void)
 {
 	uchar buffer[999];
 	ulong len=0;
-	uchar buffAmt[12+1];
-	uchar buffAmtFmt[12+1];
+	uchar buffAmt[14+1];
+	uchar buffAmtFmt[14+1];
 	uchar bufferNoRek[30];
+
+
+
+	uchar	ProductId[4+1];
+	uchar	BillId[20+1];
+	uchar	CustName[30+1];
+	uchar	NumOfBill[1+1];
+	uchar	PayBallance[20+1];
+	uchar	PayPeriod[20+1];
+	uchar	PayPenalti[20+1];
+	uchar	PayTax[20+1];
+	uchar	TotalBayar[20+1];
+	uchar   NoRekAsal[30+1];
+	uchar   AdminFee[20+1];
+	uchar   OtherFee[20+1];
+	uchar   Kubikasi[20+1];
+
+	uchar   PayPeriodBulan[20+1];
+	uchar   PayPeriodTahun[20+1];
+	uchar   PayPeriodFmt[20+1];
+
+	
 
 	MEM_ZERO(buffer);
 	MEM_ZERO(buffAmt);
 	MEM_ZERO(buffAmtFmt);
 	MEM_ZERO(bufferNoRek);
+
+	/*
+	MEM_ZERO(ProductId);
+	MEM_ZERO(BillId);
+	MEM_ZERO(CustName);
+	MEM_ZERO(NumOfBill);
+	MEM_ZERO(PayBallance);
+	MEM_ZERO(PayPeriod);
+	MEM_ZERO(PayPenalti);
+	MEM_ZERO(PayTax);
+	MEM_ZERO(TotalBayar);
+	MEM_ZERO(NoRekAsal);
+	MEM_ZERO(AdminFee);
+	MEM_ZERO(OtherFee);
+	MEM_ZERO(Kubikasi);
+	*/
+	
+	MEM_ZERO(PayPeriodBulan);
+	MEM_ZERO(PayPeriodTahun);
+	MEM_ZERO(PayPeriodFmt);
+	
+
+	
 
 	len = PubChar2Long(glRecvPack.szBit48, 2, NULL);
 	if(len == 0)
@@ -1711,8 +1859,8 @@ uchar unPackPembayaran_PdamBkpn(void)
 	//memcpy(glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.NoHP,glProcInfo.szReq103, 13);
 	//memcpy(glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Nama,buffer+20, 30);
 
-	memcpy(buffAmt,buffer+55,10);
-	fmtAmt(buffAmtFmt,buffAmt,0,",.");
+	//memcpy(buffAmt,buffer+55,10);
+	//fmtAmt(buffAmtFmt,buffAmt,0,",.");
 	//memcpy(glProcInfo.stTranLog.BRI.PEMB_KARTUMATRIX.Total, buffAmtFmt, 12);
 
 /*
@@ -1730,11 +1878,62 @@ uchar unPackPembayaran_PdamBkpn(void)
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.BillId, buffer+4, 16);
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.CustName, buffer+20, 30);
 	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.NumOfBill, buffer+50, 1);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance, buffer+51, 12);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPeriod, buffer+63, 16);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPenalti, buffer+79, 6);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayTax, buffer+85, 9);
-	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.TotalBayar, buffer, 12);
+	//memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance, buffer+59, 10);
+	//memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPeriod, buffer+69, 6);
+	memcpy(PayPeriod, buffer+69, 6);
+	memcpy(PayPeriodBulan, PayPeriod+4, 2);
+	memcpy(PayPeriodTahun, PayPeriod, 4);
+	memcpy(PayPeriodFmt, PayPeriodBulan, 2);
+	strcat(PayPeriodFmt, " - ");
+	strcat(PayPeriodFmt, PayPeriodTahun);
+	strcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPeriod, PayPeriodFmt);
+	
+	//memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPenalti, buffer+75, 9);
+	//memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayTax, buffer+84, 10);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.Kubikasi, buffer+94, 17);
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.ReffNum, buffer+135, 15);
+
+
+	
+	//memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.TotalBayar, buffer, 12);
+
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmtFmt);
+	memcpy(buffAmt,buffer+75,9);
+	fmtAmt(buffAmtFmt,buffAmt,0,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayPenalti, buffAmtFmt, 12);
+
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmtFmt);
+	memcpy(buffAmt,buffer+84,10);
+	fmtAmt(buffAmtFmt,buffAmt,0,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayTax, buffAmtFmt, 12);
+
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmtFmt);
+	//strcpy(glProcInfo.stTranLog.szAmount, glRecvPack.szBit4);
+	strcpy(buffAmt, glRecvPack.szBit4);
+	fmtAmt(buffAmtFmt,buffAmt,2,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.TotalBayar, buffAmtFmt, 14);
+
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmtFmt);
+	memcpy(buffAmt,buffer+57,12);
+	fmtAmt(buffAmtFmt,buffAmt,2,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.PayBallance, buffAmtFmt, 14);
+
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmtFmt);
+	memcpy(buffAmt,buffer+111,12);
+	fmtAmt(buffAmtFmt,buffAmt,2,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.AdminFee, buffAmtFmt, 12);
+
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmtFmt);
+	memcpy(buffAmt,buffer+123,12);
+	fmtAmt(buffAmtFmt,buffAmt,2,",.");
+	memcpy(glProcInfo.stTranLog.BRI.PEMB_PDAM.OtherFee, buffAmtFmt, 12);
+	
 
 	return TRUE;
 }
@@ -1749,12 +1948,14 @@ uchar unPackSetorTunaiBankBkpn(void)
 	uchar bufferAmount[30];
 	uchar bufferSaldo[30];
 	ulong len=0;
+	uchar bufferNoRekTujuan[30];
 
 	MEM_ZERO(buffer);
 	MEM_ZERO(bufferFee);
 	MEM_ZERO(bufferNoRek);
 	MEM_ZERO(bufferAmount);
 	MEM_ZERO(bufferSaldo);
+	MEM_ZERO(bufferNoRekTujuan);
 
 	MEM_ZERO(buffer);
 
@@ -1770,13 +1971,18 @@ uchar unPackSetorTunaiBankBkpn(void)
 	memcpy(bufferSaldo, buffer, 14);
 	fmtAmt(glProcInfo.stTranLog.BRI.SetorPasti.SaldoAkhir, bufferSaldo, 0,",.");
 
-	memcpy(bufferNoRek, glRecvPack.szField103+2, 28);
+	memcpy(bufferNoRek, glRecvPack.szField102+2, 28);
 	//memcpy(glProcInfo.stTranLog.BRI.SetorPasti.NoRekAsal, bufferNoRek+2, 26);
 	memcpy(glProcInfo.stTranLog.BRI.SetorPasti.NoRekAsal, bufferNoRek+2, 6);
 	strcat(glProcInfo.stTranLog.BRI.SetorPasti.NoRekAsal, "****");
 
 	memcpy(bufferAmount,glRecvPack.szBit4,10);
 	fmtAmt(glProcInfo.stTranLog.BRI.SetorPasti.Setoran,bufferAmount,0,",.");
+
+
+	memcpy(bufferNoRekTujuan, glRecvPack.szField103+2, 28);
+	//memcpy(glProcInfo.stTranLog.BRI.SetorPasti.NoRekAsal, bufferNoRek+2, 26);
+	memcpy(glProcInfo.stTranLog.BRI.SetorPasti.NoRekTujuan, bufferNoRekTujuan+2, 10);
 	
 
 	return TRUE;

@@ -89,8 +89,14 @@ void PrnSetorTunaiBkpn(void);
 
 void PrnHeaderCardNumberBkpn(void);
 
+void PrnGantiPinBkpn(void);
 
 
+
+
+
+void PrnFooterInfoWomBkpn(void);
+void PrnFooterInfoBafBkpn(void);
 
 
 

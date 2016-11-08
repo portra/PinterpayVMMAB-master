@@ -233,6 +233,10 @@ int  SwipeCardProcBkpn(uchar bCheckICC);
 int  ReadMagCardInfoBkpn(void);
 
 
+int  GetCardInitKartuBkpn(uchar ucMode);
+
+int ValidCardInitBkpn(void);
+
 
 
 

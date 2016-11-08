@@ -1,11 +1,6 @@
----- mnuMiniAtmBkpn Matches (10 in 3 files) ----
-Dft.h (source):    "1 MINI ATM", //mnuMiniAtmBkpn
-Dft.h (source):    "2 MERCHANT", //mnuMiniAtmBkpnMer
-Dft.h (source):    "2 NASABAH", //mnuMiniAtmBkpnNas
-Hdl.c (source):				hdlSubmenu(mnuMiniAtmBkpn,mnuSetupBkpn);
-Hdl.c (source):		case mnuMiniAtmBkpn:
-Hdl.c (source):		case mnuMiniAtmBkpnMer:
-Hdl.c (source):		case mnuMiniAtmBkpnNas:
-Key.h (source):				mnuMiniAtmBkpn, 
-Key.h (source):				mnuMiniAtmBkpnMer, 
-Key.h (source):				mnuMiniAtmBkpnNas, 
+---- case TRANS_TYPE_AJ_PAY: Matches (5 in 4 files) ----
+Artajasa.c (source):		//case TRANS_TYPE_AJ_PAY:
+Fileoper.c (source):			case TRANS_TYPE_AJ_PAY:
+miniATM.c (source):		case TRANS_TYPE_AJ_PAY:
+miniATM.c (source):			case TRANS_TYPE_AJ_PAY:
+Util.c (source):		case TRANS_TYPE_AJ_PAY:	

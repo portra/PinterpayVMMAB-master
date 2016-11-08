@@ -407,7 +407,7 @@ TRAN_CONFIG		glTranConfig[] =
 	// diki add atmb
 	{_T_NOOP("PURCHASE ATMB"), 			"0100", "391000",  ACT_INC_TRACE,0},//inquiry
 	{_T_NOOP("PURCHASE ATMB"), 			"0200", "401000", PRN_RECEIPT+ACT_INC_TRACE+NEED_REVERSAL+WRT_RECORD,0},
-	{_T_NOOP("LOGON AJ"),       "0800", "920000", ACT_INC_TRACE, 0}
+	{_T_NOOP("LOGON ATMB"),               "0800", "920000", ACT_INC_TRACE, 0}
 };
 
 HOST_ERR_MSG	glHostErrMsg[] =		//error code Bit 39

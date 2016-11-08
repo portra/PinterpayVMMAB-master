@@ -168,6 +168,12 @@ int TransInfoKodeBankBkpnPilih(char *dst, const char *src);
 int TransAtmbMerchantNasabahMenuTrue(void);
 int TransAtmbMerchantNasabahMenuFalse(void);
 
+int TransInfoKodeBankBkpn2(void);
+
+int TransInitKartuBkpn(void);
+
+
+
 
 
 
@@ -186,5 +192,6 @@ int TransAtmbMerchantNasabahMenuFalse(void);
 
 
 #endif
+
 
 

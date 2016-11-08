@@ -1491,8 +1491,9 @@ typedef struct _tagPEMBAYARAN_TELKOM
 {
 	uchar	Nama[30+1];
 	uchar	NoTelepon[13+1];
-	uchar	Total[12+1];
+	uchar	Total[14+1];
 	uchar	NoRek[20+1];
+	uchar	PayPeriod[20+1];
 }PEMBAYARAN_TELKOM;
 
 typedef struct _tagPEMBAYARAN_KARTUHALO
@@ -1509,6 +1510,8 @@ typedef struct _tagPEMBAYARAN_KARTUMATRIX
 	uchar	Total[12+1];
 	uchar	Provider[20+1];
 	uchar	NoRek[20+1];
+	uchar	BulanTahun[20+1];
+	uchar	PayPeriod[20+1];
 }PEMBAYARAN_KARTUMATRIX;
 
 typedef struct _tagPEMBAYARAN_PLNPASCABAYAR
@@ -1565,15 +1568,27 @@ typedef struct _tagPEMBAYARAN_KARTUKREDIT_KTA
 
 typedef struct _tagPEMBAYARAN_CICILAN
 {
-	uchar	NoKontrak[16+1];
-	uchar	Nama[30+1];
-	uchar	JatuhTempo[10+1];
-	uchar	Angsuran[4+1];
-	uchar	Tagihan[12+1];
-	uchar	Total[12+1];
-	uchar	MLPO[32+1];
-	uchar	Tampilan[24+1];
+
+	uchar	TotalPembayaran[20+1];
 	uchar	NoRek[20+1];
+	uchar	billid[20+1];
+	uchar	name[30+1];
+	uchar	ptname[30+1];
+	uchar	branchname[30+1];
+	uchar	serialnumber[20+1];
+	uchar	norangka[30+1];
+	uchar	merkkendaraan[30+1];
+	uchar	tenor[5+1];
+	uchar	sisaangsuran[16+1];
+	uchar	noangsuran[5+1];
+	uchar	jatuhtempo[15+1];
+	uchar	nilaitagihan[16+1];
+	uchar	nilaiangsuran[16+1];
+	uchar	nilaidenda[16+1];
+	uchar	nilaiadmin[16+1];
+	uchar	nilailainnya[16+1];
+	uchar	referencenumber[30+1];
+	
 }PEMBAYARAN_CICILAN;
 
 typedef struct _tagPEMBAYARAN_ZAKAT_INFAQ
@@ -1633,6 +1648,7 @@ typedef struct _tagISI_ULANG
 	uchar	NomerResiSF[20+1];
 	uchar	NoRekPengirim[28+1];
 	uchar	AdminFee[12+1];
+	uchar	OperatorProvider[20+1];
 }ISI_ULANG;
 
 
@@ -1641,7 +1657,7 @@ typedef struct _tagSETOR_PASTI
 	uchar	NamaAsal[15+1];	
 	uchar	NamaTujuan[20+1];
 	uchar	NoRekAsal[30+1];
-	uchar	NoRekTujuan[15+1];
+	uchar	NoRekTujuan[30+1];
 	uchar	BankAsal[15+1];
 	uchar	KodeJenisTransfer[2+1];
 	uchar	SaldoAkhir[20+1];
@@ -1721,7 +1737,15 @@ typedef struct _tagPEMBAYARAN_PDAM
 	uchar	PayTax[20+1];
 	uchar	TotalBayar[20+1];
 	uchar   NoRekAsal[30+1];
+	uchar   AdminFee[20+1];
+	uchar   OtherFee[20+1];
+	uchar   Kubikasi[20+1];
+	uchar   ReffNum[20+1];
 }PEMBAYARAN_PDAM;
+
+
+
+
 
 
 // DIKI EDIT ATMB /AJ

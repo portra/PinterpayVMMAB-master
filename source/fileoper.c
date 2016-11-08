@@ -2813,6 +2813,19 @@ void CalcMiniAtmTotal(void *TotalInfo, ushort *TotalCnt, uchar *TotalAmt, uchar 
 				uiTotalCnt++;
 				SafeAscAdd(szTotalAmt, stTranLog.szAmount, 12);
 				break;
+				
+
+			case TRANS_TYPE_AJ_PAY:
+				idx=47;
+				if((((MINIATM_TOTAL_INFO*)TotalInfo)[idx]).uiTotalCnt==0)
+					strcpy((((MINIATM_TOTAL_INFO*)TotalInfo)[idx]).szNamaFitur, "PURCHASE ATMB");
+
+				(((MINIATM_TOTAL_INFO*)TotalInfo)[idx]).uiTotalCnt++;
+				SafeAscAdd((((MINIATM_TOTAL_INFO*)TotalInfo)[idx]).szTotalAmt, stTranLog.szAmount, 12);
+
+				uiTotalCnt++;
+				SafeAscAdd(szTotalAmt, stTranLog.szAmount, 12);
+				break;
 	
 			
 		}

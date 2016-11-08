@@ -242,6 +242,10 @@ static int DispMainLogo(void)
 
 static void DispIndicator(void)
 {
+
+	//ScrPrint(0, 7, ASCII, "ATM BERSAMA	   PRIMA");  // menu display SCM EDC
+	ScrPrint(0, 7, ASCII, "BUKOPIN - ATMB -PRIMA");  // menu display SCM EDC
+
 #ifdef APP_DEBUG
 	ScrPrint(0, 2, ASCII, "DEBUG");
 #elif defined(EMV_TEST_VERSION) && defined(ENABLE_EMV)
@@ -1288,8 +1292,18 @@ switch(glProcInfo.stTranLog.ucTranType)
 			strcpy(szPan, "91");
 			memcpy(szPan+2, glProcInfo.stTranLog.szPan, strlen(glProcInfo.stTranLog.szPan)-2);
 			break;
+			// for AJ
 		case TRANS_TYPE_AJ_PAY_INQ:
-		case TRANS_TYPE_AJ_PAY:		
+		case TRANS_TYPE_AJ_PAY:	
+			// for PP
+		case PULSA:
+		case INQTRANS:
+		case INQPPOB:
+		case PPOB:
+		case INQPINTERPAY:
+		case PINTERPAY:
+		case PPAYAJ:
+		case PLNPRA:
 			strcpy(szPan, "93");
 			memcpy(szPan+2, glProcInfo.stTranLog.szPan, strlen(glProcInfo.stTranLog.szPan)-2);
 			break;
@@ -8420,7 +8434,8 @@ int ReadMagCardInfoBkpn(void)
 	//{
 		glProcInfo.stTranLog.uiEntryMode = MODE_SWIPE_INPUT;
 		//sprintf((char *)glProcInfo.szTrack1, "%.*s", LEN_TRACK1, glEdcMsgPtr->MagMsg.track1);
-		sprintf((char *)glProcInfo.szTrack2, "%.*s", LEN_TRACK2, "4731890000000101=2103126888000000");
+		//sprintf((char *)glProcInfo.szTrack2, "%.*s", LEN_TRACK2, "4731890000000101=2103126888000000");
+		sprintf((char *)glProcInfo.szTrack2, "%.*s", LEN_TRACK2, glSysCtrl.szNoKartuBkpn1);
 		//sprintf((char *)glProcInfo.szTrack3, "%.*s", LEN_TRACK3, glEdcMsgPtr->MagMsg.track3);
 	//}
 	//else
@@ -8444,5 +8459,197 @@ int ReadMagCardInfoBkpn(void)
 }
 
 
+
+
+
+int GetCardInitKartuBkpn(uchar ucMode)
+{
+	int		iRet, iEventID;
+	uchar	bCheckICC, ucKey;
+
+
+	// diki add
+	PrivateLabelCardDetect= FALSE;
+
+
+	//cek apakah mesti settle atau tidak? diki add for bukopin
+	/*
+	iRet = ValidTransSettleBkpn();
+		if( iRet==1 )
+		{
+			return 1;
+		}
+		*/
+
+		
+
+	if( (glProcInfo.stTranLog.uiEntryMode & 0x0F)!=MODE_NO_INPUT )
+	{
+		return 0;
+	}
+
+	if( ucMode & FALLBACK_SWIPE )
+	{
+		ucMode &= ~(SKIP_CHECK_ICC|CARD_INSERTED);	// clear bit 8, force to check service code
+	}
+
+	bCheckICC = !(ucMode & SKIP_CHECK_ICC);
+	
+
+	// diki add for mini atmb
+	/*
+	if(MenuAtmbMerchantNasabah)
+		{
+		iRet = SwipeCardProcBkpn(bCheckICC);
+			if( iRet==0 )
+			{
+				return ValidCard();
+			}
+		}
+	*/
+	
+	
+
+	TimerSet(0, TIME_OUT_INPUT*10);
+	while( 1 )
+	{
+		iEventID = DetectCardEvent(ucMode);
+		if( iEventID==CARD_KEYIN )
+		{
+			ucKey = getkey();
+			if( ucKey==KEYCANCEL )
+			{
+				return ERR_USERCANCEL;
+			}
+			if( (ucMode & CARD_KEYIN) && ucKey>='0' && ucKey<='9' )
+			{
+				return ManualInputPan(ucKey);
+			}
+		}
+		else if( iEventID==CARD_SWIPED )
+		{
+			iRet = SwipeCardProc(bCheckICC);
+			if( iRet==0 )
+			{
+				return ValidCardInitBkpn();
+			}
+			else if( iRet==ERR_SWIPECARD )
+			{
+				DispMagReadErr();
+				PubBeepErr();
+				PubWaitKey(3);
+			}
+			else if( iRet==ERR_NEED_INSERT )	// 是芯片卡
+			{
+				if( !(ucMode & CARD_INSERTED) )
+				{	// 本身交易不允许插卡
+					return iRet;
+				}
+				ucMode &= ~CARD_SWIPED;			// 去掉刷卡检查
+			}
+			else
+			{
+				return iRet;
+			}
+		}
+
+////////// diki add
+		else if( iEventID==CARD_TAP)
+		{
+			iRet = StartTapPrvtLbl();
+			if( iRet==0 )
+			{
+				PrivateLabelCardDetect= TRUE;
+				return ValidCardPrvtLbl();
+			}
+			else
+			{
+				return iRet;
+			}
+		}
+///////////////////////
+				
+#ifdef ENABLE_EMV
+		else if( iEventID==CARD_INSERTED )
+		{
+
+///////////////////////
+		iRet = Req_ICC_PrvtLbl_Cek();
+		if( iRet==0 )
+		{
+			///iRet = TransSalePrvtLbl();
+			///if( iRet!=0 )
+			///{
+			///	CommOnHook(FALSE);
+			///	return iRet;
+			///}
+			
+			iRet = Req_ICC_PrvtLbl();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+
+			iRet = ValidCardPrvtLbl();	// 校验卡号
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+			PrivateLabelCardDetect= TRUE;
+			return 0;
+		} else {
+		////}
+
+
+			iRet = InsertCardProc();
+			if( iRet==0 )
+			{
+				return 0;
+			}
+			else if( iRet==ERR_NEED_FALLBACK )
+			{
+				DispFallBackPrompt();
+				PromptRemoveICC();
+				ucMode = CARD_SWIPED|FALLBACK_SWIPE;	// Now we don't support fallback to manual-PAN-entry
+			}
+			else if( iRet==ERR_TRAN_FAIL )
+			{
+				PubDispString(_T("NOT ACCEPTED"), 4|DISP_LINE_LEFT);
+				PubBeepErr();
+				PubWaitKey(3);
+				PromptRemoveICC();
+				//emv_test();
+				return ERR_NO_DISP;
+			}
+			else
+			{
+				return iRet;
+			}
+
+			}
+		
+		}		
+		
+		else if( iEventID==ERR_NO_DISP)
+			return ERR_NO_DISP;
+#endif
+	}
+}
+
+
+
+int ValidCardInitBkpn(void)
+{
+	int		iRet;
+	uchar 	szPan[lenPan+1];
+
+	MEM_ZERO(szPan);
+	MEM_ZERO(glSysCtrl.szNoKartuBkpn1);
+	strcpy(glSysCtrl.szNoKartuBkpn1, glProcInfo.szTrack2);
+	
+	SaveSysCtrlBase();
+
+	return 0;
+}
 
 
