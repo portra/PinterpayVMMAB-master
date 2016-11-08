@@ -784,7 +784,7 @@ if(glProcInfo.stTranLog.ucTranType==PLNPRA){
 		uint n=0,a=0,b=0,i=0,ii=0,headl=5;
 		memcpy(szBuff, &glRecvPack.szBit62[2], 3);
 		if(memcmp(glRecvPack.szBit39, "01", 2)==0){
-			memcpy(szBuff, &glRecvPack.szBit39[2], 3);
+			memcpy(szBuff, &glRecvPack.szBit48[2], 3);
 		}
 		PubTrimHeadChars(szBuff,'0');
 		responseCounter=atoi(szBuff);

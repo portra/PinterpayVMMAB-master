@@ -127,7 +127,7 @@ int main(void)
 		}
 
 		// When TAP card detect
-		mode = 'A';	
+		/*mode = 'A';	
 		PiccClose();
 		iRet = PiccOpen();
 		if(iRet!=0)
@@ -150,7 +150,7 @@ int main(void)
 			continue;
 		}
 			}
-
+*/
 		
 
         // If any key is pressed

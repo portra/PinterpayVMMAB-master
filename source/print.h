@@ -91,6 +91,7 @@ void PrnInvoiceBatch(void);
 void PrnDateTime(void);
 void PrnRefNumApprCode(void);
 void PrnAmount_New(uchar * pszIndent, uchar ucNeedSepLine);
+void PrnAmount(uchar * pszIndent, uchar ucNeedSepLine);
 void PrnAppEMV(void);
 void PrnAPPLABEL(void);
 void PrnAPPPreferName(void);

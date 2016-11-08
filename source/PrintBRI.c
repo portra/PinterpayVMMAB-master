@@ -275,7 +275,7 @@ int PrnReceipt(uchar ucPrnFlag)
 
 	if(glCurTlmTmsIss.issPrintReceipt!=TRUE)
 	{
-		return 0;
+		//return 0;
 	}
 
 	DispPrinting();
@@ -337,8 +337,12 @@ int PrnReceipt(uchar ucPrnFlag)
 		PrnRefNumApprCode();
 
 		//AMOUNT
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
-
+		//PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 		PrnStep(10);
 
 		//EMV
@@ -550,7 +554,12 @@ int PrnSale(uchar ucPrnFlag)
 		}
 #endif
 		//AMOUNT
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		//PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 
 		//EMV
 
@@ -965,7 +974,12 @@ int PrnCicilanBring(uchar ucPrnFlag)
 		PrnStr("\n");
 		PrnSetNormal();
 		//AMOUNT
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		//PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 		PrnStr("\n");
 		
 		PrnSetNormal();
@@ -1171,7 +1185,12 @@ int PrnCicilanBukopin(uchar ucPrnFlag)
 		PrnStr("\n");
 		PrnSetNormal();
 		//AMOUNT
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		//PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 		//PrnStr("\n");
 		//MultiLngPrnStr("INFORMASI CICILAN BUKOPIN", DISP_LINE_LEFT);
 		//PrnSetBig();
@@ -3927,7 +3946,12 @@ int PrnReceiptPrvtLbl(uchar ucPrnFlag)
 		PrnRefNumApprCode();
 
 		//AMOUNT
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		//PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 
 		PrnStep(10);
 
@@ -4140,7 +4164,11 @@ int PrnCicilanBukopinPrvtLbl(uchar ucPrnFlag)
 		PrnStr("\n");
 		PrnSetNormal();
 		//AMOUNT
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 		//PrnStr("\n");
 		//MultiLngPrnStr("INFORMASI CICILAN BUKOPIN", DISP_LINE_LEFT);
 		//PrnSetBig();
