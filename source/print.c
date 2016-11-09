@@ -30,7 +30,7 @@ static int  PrnCurAcqTransList_T(void);
 static void PrnHead(uchar ucFreeFmat);
 //static int  PrnCustomLogo_T(void);
 static void PrnHead_T(void);
-static void PrnAmount(uchar *pszIndent, uchar ucNeedSepLine);
+//static void PrnAmount(uchar *pszIndent, uchar ucNeedSepLine);
 static void PrnDescriptor(void);
 static void PrnAdditionalPrompt(void);
 static void PrnStatement(void);
@@ -1535,6 +1535,186 @@ void PrnAmount(uchar *pszIndent, uchar ucNeedSepLine)
 		PrnSetBig();
 		MultiLngPrnStr(szTempBuff, DISP_LINE_LEFT);
 		PrnSetNormal();
+if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+
+			uchar szBuff[2];
+
+			uint 	l=0;
+
+			uint	paramNameLenght=0;
+
+		 	uint	ucKey;
+
+			uint 	iRet, iMenuNo, n=0,a=0,b=0,i=0,ii=0;
+
+			static	MenuItem stTranMenu[4], menuItm;
+
+			if (1)
+
+			{
+
+			   CommOnHook(FALSE);
+
+			}
+
+			memset(szBuff,0,sizeof(szBuff));
+
+			ScrCls();
+
+			DispTransName();
+
+			memcpy(szBuff, &glRecvPack.szBit62[5], 2);		
+
+			PubTrimHeadChars(szBuff,'0');
+
+			l=atoi(szBuff);
+
+			for(n=0;n<responseCounter;n++){				
+
+				memset(glProcInfo.stTranLog.szParamName,0,sizeof(glProcInfo.stTranLog.szParamName));
+
+				memset(glProcInfo.stTranLog.szParamValue,0,sizeof(glProcInfo.stTranLog.szParamValue));
+
+				while(1){
+
+					if(memcmp(&glRecvPack.szBit62[7+i],";",1)==0){
+
+						i++;
+
+						a=0;
+
+						break;
+
+					}
+
+					memcpy(&glProcInfo.stTranLog.szParamName[a],&glRecvPack.szBit62[7+i],1);
+
+					a++;
+
+					i++;
+
+				}
+
+				while(1){
+
+					if(memcmp(&glRecvPack.szBit63[7+ii],";",1)==0){
+
+						ii++;
+
+						b=0;
+
+						break;
+
+					}
+
+					memcpy(&glProcInfo.stTranLog.szParamValue[b],&glRecvPack.szBit63[7+ii],1);
+
+					b++;
+
+					ii++;
+
+				}
+
+
+
+				if(glProcInfo.stTranLog.szParamName==NULL || *glProcInfo.stTranLog.szParamName==0){
+
+					sprintf((char *)szTempBuff, "%*.*s%.*s \n", (l+1),(l+1),glProcInfo.stTranLog.szParamName,(31-l),glProcInfo.stTranLog.szParamValue);
+
+					MultiLngPrnStr(szTempBuff, DISP_LINE_CENTER);
+
+				}else{
+
+					paramNameLenght=0;
+
+					while(1){
+
+						if(glProcInfo.stTranLog.szParamName[paramNameLenght]=='\0')break;
+
+						paramNameLenght++;
+
+					}
+
+					if(paramNameLenght<=15){
+
+						sprintf((char *)szTempBuff, "%*.*s:%.*s \n", l, l,glProcInfo.stTranLog.szParamName, (31-l),glProcInfo.stTranLog.szParamValue);
+
+						MultiLngPrnStr(szTempBuff, DISP_LINE_CENTER);
+
+					}else{
+
+						sprintf((char *)szTempBuff, "%22.22s: \n", glProcInfo.stTranLog.szParamName);
+
+						MultiLngPrnStr(szTempBuff, DISP_LINE_CENTER);
+
+						memset(szTempBuff,0,sizeof(szTempBuff));
+
+						sprintf((char *)szTempBuff, "%22.15s \n", glProcInfo.stTranLog.szParamValue);
+
+						MultiLngPrnStr(szTempBuff, DISP_LINE_CENTER);
+
+					}
+
+				}
+
+				
+
+			}
+
+			
+
+		}
+
+
+
+			if(glProcInfo.stTranLog.ucTranType==PLNPRA){
+
+				App_ConvAmountTran(glProcInfo.stTranLog.szNilai, szBuff, 0);
+
+				sprintf((char *)szTempBuff, "%sNILAI    %17.17s\n", pszIndent, szBuff);
+
+				MultiLngPrnStr(szTempBuff, DISP_LINE_LEFT);
+
+				App_ConvAmountTran(glProcInfo.stTranLog.szDenda, szBuff, 0);
+
+				sprintf((char *)szTempBuff, "%sDENDA      %17.17s\n", pszIndent, szBuff);
+
+				MultiLngPrnStr(szTempBuff, DISP_LINE_LEFT);
+
+				App_ConvAmountTran(glProcInfo.stTranLog.szAdmin, szBuff, 0);
+
+				sprintf((char *)szTempBuff, "%sADMIN      %17.17s\n", pszIndent, szBuff);
+
+				MultiLngPrnStr(szTempBuff, DISP_LINE_LEFT);
+
+			}
+
+
+
+			if(glProcInfo.stTranLog.ucTranType== INQTRANS){ //|| glProcInfo.stTranLog.ucTranType==PURCHASE_AJ){
+
+				// App_ConvAmountTran(glProcInfo.stTranLog.szNilai, szBuff, 0);
+
+				App_ConvAmountTran(glProcInfo.stTranLog.szAmount, szBuff, GA_SEPARATOR);
+
+				/// App_ConvAmountTran(glProcInfo.stTranLog.szAmount, szBuff, 0);
+
+				sprintf((char *)szTempBuff, "%sAMOUNT:%17.17s", pszIndent, szBuff);
+
+				strcat(szTempBuff, ",-\n");
+
+				PrnFontSet(1, 1);
+
+				//PrnDoubleWidth(1, 1);
+
+				PrnDoubleHeight(1, 1);
+
+				MultiLngPrnStr(szTempBuff, DISP_LINE_LEFT);
+
+				PrnSetNormal();
+
+			}
+
 
 		if( ucNeedSepLine )
 		{
@@ -3548,7 +3728,11 @@ int PrintReceiptTrx(uchar ucPrnFlag)
 		PrnStr("\n");
 
 		// amount
-		PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnAmount((uchar *)"", TRUE);  //Print amount
+		}else{
+			PrnAmount_New((uchar *)"", TRUE);  //Print amount
+		}
 		
 		if( glProcInfo.stTranLog.uiEntryMode & MODE_CHIP_INPUT )
 		{
@@ -3574,6 +3758,9 @@ int PrintReceiptTrx(uchar ucPrnFlag)
 			else
 			{
 				PrnStr("\n");
+			}
+			if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+				PrnAmount((uchar *)"", TRUE);  //Print amount
 			}
 		}
 
@@ -3652,7 +3839,7 @@ int PrintReceipt(uchar ucPrnFlag)
 
 	if(glCurTlmTmsIss.issPrintReceipt!=TRUE)
 	{
-		return 0;
+		//return 0;
 	}
 
 	if (ChkIfIrDAPrinter())
