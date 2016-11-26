@@ -127,7 +127,7 @@ int main(void)
 		}
 
 		// When TAP card detect
-		/*mode = 'A';	
+		mode = 'A';	
 		PiccClose();
 		iRet = PiccOpen();
 		if(iRet!=0)
@@ -150,7 +150,7 @@ int main(void)
 			continue;
 		}
 			}
-*/
+
 		
 
         // If any key is pressed
@@ -255,16 +255,19 @@ int main_sub(ST_EVENT_MSG *pstEventMsg)
 		
 	
 	case MAGCARD_MSG:
-		iRet = ProcMagMsg();
+		////iRet = ProcMagMsg();
+		iRet = 0;  // diki add
 		break;
 	
 	case ICCARD_MSG:
-		iRet = ProcICCMsg();
-		PromptRemoveICC();
+		////iRet = ProcICCMsg();
+		////PromptRemoveICC();
+		iRet = 0;  // diki add
 	    break;
 
 	case TAPCARD_MSG:
-		iRet = TransSalePrvtLblTes();
+		////iRet = TransSalePrvtLblTes(); 
+		iRet = 0;  // diki add
 		break;
 	
 	

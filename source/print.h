@@ -76,6 +76,8 @@ int PrintReceiptTrx(uchar ucPrnFlag);
 
 //new
 int PrnCustomLogo_T(void);
+int PrnCustomLogo_Pinterpay(void); // diki add
+int PrnCustomLogo_Artajasa(void); // diki add
 void PrnTidMid(void);
 void PrnTid(void);
 void PrnMid(void);

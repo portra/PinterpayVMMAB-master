@@ -172,6 +172,27 @@ int TransInfoKodeBankBkpn2(void);
 
 int TransInitKartuBkpn(void);
 
+int TransInitNorekBkpn(void);
+int TransInitNorekBkpn2(void);
+
+
+
+int TransTestHostBkpn(void);
+
+int TransTrfAntarBankBkpnMerchant(void);
+
+
+int MenuMatmBkpnBayarAdmin(void);
+int MenuMatmBkpnRoll(void);
+int TransBeliKertasRoll1(void);
+int TransBeliKertasRoll2(void);
+
+
+
+
+
+
+
 
 
 

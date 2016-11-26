@@ -21,6 +21,10 @@ int TransLogonAj(void);
 int InputUangAj(void);
 
 
+int DisplayNotActive(void);
+
+
+
 
 
 ////////////////////////////////////////

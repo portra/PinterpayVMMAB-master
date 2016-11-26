@@ -3376,8 +3376,14 @@ void PubShowTitle(uchar bClrScreen, uchar *pszTitle)
 		iLen = NUM_MAXZHCHARS;
 	}
 
+	// diki add for pinterpay, hapus tanggal
+	memcpy(&pszTitle[0], "PINTERPAY  ", 11); // add diki
+	
 	// diki add for scm, hapus jam
 	memcpy(&pszTitle[11], "  SCM", 5); // add diki
+
+	// diki add for scm - bukopin, hapus jam & tanggal
+	////memcpy(&pszTitle[0], "    ATM MINI    ", 16); // add diki
 
     // Support right-to-left language
 	if (sg_stAppLibConfig.bStrFromRightToLeft)

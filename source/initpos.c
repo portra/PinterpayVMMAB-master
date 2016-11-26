@@ -547,7 +547,7 @@ void ResetAllPara(uchar bFirstTime)
 	glTlmSysParam.stEdcInfo.ucTMSTimeOut    = 60;
 	glTlmSysParam.stEdcInfo.ucIdleMinute    = 0;		//ori 1	//delay screensaver
 	glTlmSysParam.stEdcInfo.ucIdleShutdown  = 0;
-	sprintf((char *)glTlmSysParam.stEdcInfo.szTMSNii, "134");
+	sprintf((char *)glTlmSysParam.stEdcInfo.szTMSNii, "001");
 
 	ResetPwdAll();
 
@@ -591,7 +591,7 @@ void ResetAllPara(uchar bFirstTime)
 	}
 
 	UpdateTermInfo();
-	if (ChkTerm(_TERMINAL_S60_) || ChkTerm(_TERMINAL_S80_) ||
+	if (ChkTerm(_TERMINAL_S60_) || ChkTerm(_TERMINAL_S80_) || ChkTerm(_TERMINAL_S900_) ||
 		ChkTerm(_TERMINAL_S90_) || ChkTerm(_TERMINAL_SP30_)||
 		ChkTerm(_TERMINAL_S58_))
 	{
@@ -663,7 +663,7 @@ void ResetAllPara(uchar bFirstTime)
 	glSysParam.stEdcInfo.ucTMSTimeOut    = 60;
 	glSysParam.stEdcInfo.ucIdleMinute    = 0;		//ori 1	//delay screensaver
 	glSysParam.stEdcInfo.ucIdleShutdown  = 0;
-	sprintf((char *)glSysParam.stEdcInfo.szTMSNii, "134");
+	sprintf((char *)glSysParam.stEdcInfo.szTMSNii, "001");
 
 	ResetPwdAll();
 
@@ -707,7 +707,7 @@ void ResetAllPara(uchar bFirstTime)
 	}
 
 	UpdateTermInfo();
-	if (ChkTerm(_TERMINAL_S60_) || ChkTerm(_TERMINAL_S80_) ||
+	if (ChkTerm(_TERMINAL_S60_) || ChkTerm(_TERMINAL_S80_) || ChkTerm(_TERMINAL_S900_) ||
 		ChkTerm(_TERMINAL_S90_) || ChkTerm(_TERMINAL_SP30_)||
 		ChkTerm(_TERMINAL_S58_))
 	{
@@ -3035,7 +3035,7 @@ void InitEdcParam(void)
 	glSysCtrl.sAcqStatus[0] = S_USE;
 	glSysParam.stAcqList[0].ucKey   = 0x01;
 	glSysParam.stAcqList[0].ucIndex = 0;
-	sprintf((char *)glSysParam.stAcqList[0].szNii, "019");
+	sprintf((char *)glSysParam.stAcqList[0].szNii, "001");
 	sprintf((char *)glSysParam.stAcqList[0].szName, "VM_ACQ");
 	sprintf((char *)glSysParam.stAcqList[0].szPrgName, "VISA");
 	sprintf((char *)glSysParam.stAcqList[0].szTermID, "00000001");
@@ -3179,7 +3179,7 @@ void TlmInitEdcParam(void)
 	}
 #endif
 
-	strcpy((char *)glTlmSysParam.stEdcInfo.stDownIPPriNo.szIP, "192.168.000.136");
+	strcpy((char *)glTlmSysParam.stEdcInfo.stDownIPPriNo.szIP, "061.008.079.178");
 	strcpy((char *)glTlmSysParam.stEdcInfo.stDownIPPriNo.szPort, "8181");
 
 	strcpy((char *)glTlmSysParam.stEdcInfo.stDownIPSecNo.szIP, "192.168.000.105");

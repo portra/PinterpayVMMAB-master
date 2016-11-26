@@ -22,6 +22,8 @@ extern "C" {
 
 int GetNowDispLogo(unsigned char **ppsData);
 int GetNowPrnLogo(unsigned char **ppsData);
+int GetNowPrnLogoPP(unsigned char **ppsData); // pinterpay add diki
+int GetNowPrnLogoAJ(unsigned char **ppsData); // AJ add diki
 int GetLogoWidthHeigh(unsigned char *psData, int *piWidth, int *piHeigh);
 
 #ifdef __cplusplus

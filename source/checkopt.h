@@ -34,6 +34,9 @@ MODIFICATION SHEET:
 #define HWCFG_FONTVER	14
 #define HWCFG_ICCREAD	15
 #define HWCFG_MSR		16
+#define HWCFG_TILT		17
+#define HWCFG_WCDMA		18
+
 // 17--29 reserved
 #define HWCFG_END		30
 

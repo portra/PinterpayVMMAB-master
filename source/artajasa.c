@@ -5,11 +5,20 @@
 int MenuAtmbArtajasa(void)
 {
 	int		iRet, iMenuNo;
+	/*
 	static	MenuItem stTranMenu[4] =
 	{
 		{TRUE, _T_NOOP("PURCHASE"),		NULL},
 		{TRUE, _T_NOOP("CEK TRANSAKSI"),		NULL},
 		{TRUE, _T_NOOP("FUNCTION"),		NULL}
+
+	};
+	*/
+	static	MenuItem stTranMenu[3] =
+	{
+		{TRUE, _T_NOOP("ATM BERSAMA"),		NULL},
+		{TRUE, _T_NOOP("BANK LAIN"),		NULL}
+		//{TRUE, _T_NOOP("FUNCTION"),		NULL}
 
 	};
 	static	uchar	szPrompt[]       = _T_NOOP("PLS SELECT:");
@@ -22,13 +31,16 @@ int MenuAtmbArtajasa(void)
 		break;
 
 	case 1:
-		iRet = DisplayNotActive();
+		//iRet = DisplayNotActive();
+		// TransTrfAntarBankBkpnMerchant
+		iRet = TransTrfAntarBankBkpnMerchant();
 		//iRet = 0;
 		break;
-
+	/*
 	case 2:
 		iRet = MenuAtmbArtajasaFunction();
 		break;
+		*/
 		
 
 
@@ -65,6 +77,13 @@ int MenuAtmbArtajasaFunction(void)
 		break;
 
 	case 1:
+		if( PasswordTerm()!=0 )
+		{
+			//return;
+			iRet = 0;
+			break;
+		}
+		
 		iRet = InputNoRekeningAj();
 		break;
 
@@ -1078,6 +1097,12 @@ uchar unPackAtmbAj(void)
 	uchar buffAmt[14+1];
 	uchar buffAmt2[14+1];
 
+	MEM_ZERO(buffer1);
+	MEM_ZERO(buffer2);
+	MEM_ZERO(buffer3);
+	MEM_ZERO(buffAmt);
+	MEM_ZERO(buffAmt2);
+
 	//fmtAmt(buffAmt,glProcInfo.stTranLog.szAmount,2,",.");
 	//memcpy(glProcInfo.stTranLog.BRI.TRF_ANTARBANK.Total, buffAmt, 14);
 
@@ -1129,7 +1154,11 @@ for (i=0; i<=1; i++)
 		PrnSetNormal();
 
 		//LOGO
-		PrnCustomLogo_T();
+		////PrnCustomLogo_T();
+		//PrnCustomLogo_Pinterpay
+		////PrnCustomLogo_Pinterpay();
+		// PrnCustomLogo_Artajasa
+		PrnCustomLogo_Artajasa();
 
 		//SITE NAME & ADDRESS
 		PrnHeader();
@@ -1261,6 +1290,7 @@ void PrnPurchaseAj(void)
 	PrnStr("\n");
 	PrnStr("\n");
 	MultiLngPrnStr("AMOUNT :", DISP_LINE_LEFT);
+	PrnStr("\n");
 	PrnStr("\n");
 
 	MultiLngPrnStr(printTotal, DISP_LINE_CENTER);

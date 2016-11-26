@@ -1052,7 +1052,7 @@ int PinterPayMenu(void)
 {
 	int		iRet=0, iMenuNo;
 	uchar	ucTranType;
-	static	MenuItem stTranMenu[3] =
+	static	MenuItem stTranMenu[4] =
 	{
 		{TRUE, _T_NOOP("PoinTrans"),	NULL},
 		{TRUE, _T_NOOP("Pulsa Elektrik"),	NULL},

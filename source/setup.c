@@ -371,6 +371,8 @@ int SetCommType(uchar ucMode)
 		{"CDMA",			CT_CDMA,	NULL},
 		{"WIFI",			CT_WIFI,	NULL},
 		{"RS232",			CT_RS232,	NULL},
+		{"GPRS diki",		CT_GPRS,	NULL},
+		{"CDMA diki",		CT_CDMA,	NULL},
 		//////{"DEMO ONLY",		CT_DEMO,	NULL},
 		{"",				0, NULL},
 	};// This menu does not provide translation
@@ -414,12 +416,12 @@ int SetCommType(uchar ucMode)
 			PubSmMask(&stSmDownMode, "TCPIP", SM_OFF);							// then disable this option
 		}
 		if ((ChkHardware(HWCFG_GPRS, HW_NONE) && !ChkTerm(_TERMINAL_P90_)) ||	// Sometimes P90 cannot get module info
-			((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_GPRS)) )
+			((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_GPRS))  || (ChkHardware(HWCFG_WCDMA, HW_NONE)) )
 		{
 			PubSmMask(&stSmDownMode, "GPRS", SM_OFF);
 		}
 		if ((ChkHardware(HWCFG_CDMA, HW_NONE) && !ChkTerm(_TERMINAL_P90_)) ||	// Sometimes P90 cannot get module info
-			((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_CDMA)) )
+			((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_CDMA))  || (ChkHardware(HWCFG_WCDMA, HW_NONE)) )
 		{
 			PubSmMask(&stSmDownMode, "CDMA", SM_OFF);
 		}
@@ -431,6 +433,15 @@ int SetCommType(uchar ucMode)
 		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_RS232))
 		{
 			PubSmMask(&stSmDownMode, "RS232", SM_OFF);
+		}
+		// diki add for s900
+		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_GPRS))
+		{
+			PubSmMask(&stSmDownMode, "GPRS", SM_OFF);
+		}
+		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_CDMA))
+		{
+			PubSmMask(&stSmDownMode, "CDMA", SM_OFF);
 		}
 		// diki add for mini atm bukopin
 		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_DEMO))
@@ -450,12 +461,12 @@ int SetCommType(uchar ucMode)
 			PubSmMask(&stSmDownMode, "TCPIP", SM_OFF);							// then disable this option
 		}
 		if ((ChkHardware(HWCFG_GPRS, HW_NONE) && !ChkTerm(_TERMINAL_P90_)) ||	// Sometimes P90 cannot get module info
-			((ucMode!=0) && (glSysParam.stTxnCommCfg.ucCommType==CT_GPRS)) )
+			((ucMode!=0) && (glSysParam.stTxnCommCfg.ucCommType==CT_GPRS))  || (ChkHardware(HWCFG_WCDMA, HW_NONE)) )
 		{
 			PubSmMask(&stSmDownMode, "GPRS", SM_OFF);
 		}
 		if ((ChkHardware(HWCFG_CDMA, HW_NONE) && !ChkTerm(_TERMINAL_P90_)) ||	// Sometimes P90 cannot get module info
-			((ucMode!=0) && (glSysParam.stTxnCommCfg.ucCommType==CT_CDMA)) )
+			((ucMode!=0) && (glSysParam.stTxnCommCfg.ucCommType==CT_CDMA))  || (ChkHardware(HWCFG_WCDMA, HW_NONE)) )
 		{
 			PubSmMask(&stSmDownMode, "CDMA", SM_OFF);
 		}
@@ -467,6 +478,15 @@ int SetCommType(uchar ucMode)
 		if ((ucMode!=0) && (glSysParam.stTxnCommCfg.ucCommType==CT_RS232))
 		{
 			PubSmMask(&stSmDownMode, "RS232", SM_OFF);
+		}
+		// diki add for s900
+		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_GPRS))
+		{
+			PubSmMask(&stSmDownMode, "GPRS", SM_OFF);
+		}
+		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_CDMA))
+		{
+			PubSmMask(&stSmDownMode, "CDMA", SM_OFF);
 		}
 		// diki add for mini atm bukopin
 		if ((ucMode!=0) && (glTlmSysParam.stTxnCommCfg.ucCommType==CT_DEMO))
@@ -4191,7 +4211,7 @@ int SetCommTypeTMS(uchar ucMode)
 		{"CDMA",			CT_CDMA,	NULL},
 		{"WIFI",			CT_WIFI,	NULL},
 		{"RS232",			CT_RS232,	NULL},
-		{"DEMO ONLY",		CT_DEMO,	NULL},
+		//{"DEMO ONLY",		CT_DEMO,	NULL},
 		{"",				0, NULL},
 	};// This menu does not provide translation
 

@@ -1356,8 +1356,8 @@ void displayResponse(void){
 		{
 		
 		default:
-			ScrPrint(0, 3, ASCII, "%21s", " KONEKSI KE PIHAK TIGA  ");
-			ScrPrint(0, 4, ASCII, "%21s", " PUTUS (BAD TERMINAL ID)"); 
+			ScrPrint(0, 3, ASCII, "%21s", "KONEKSI KE PIHAK TIGA  ");
+			ScrPrint(0, 4, ASCII, "%21s", "PUTUS (BAD TERMINAL ID)"); 
 			ScrPrint(0, 7, ASCII, "%21s", ResponCode);
 			break;	
 		}
@@ -1431,7 +1431,7 @@ void displayResponse(void){
 		{
 	
 		default:
-			ScrPrint(0, 3, ASCII, "%21s", " KONEKSI KE PIHAK TIGA");
+			ScrPrint(0, 3, ASCII, "%21s", "KONEKSI KE PIHAK TIGA");
 			ScrPrint(0, 4, ASCII, "%21s", " PUTUS     ");
 			ScrPrint(0, 7, ASCII, "%21s", ResponCode);
 			break;
@@ -4099,7 +4099,8 @@ int PilihJenisRekeningBkpn()
 	int ret;
 
 	//char *menu[]={"Jenis Rekening","1. Tabungan","2. Giro",0};
-	char *menu[]={"Rekening Transfer","1. Bukopin","2. Bank Lain",0};
+	///char *menu[]={"Rekening Transfer","1.Sesama Bukopin","2.Bukpn-BankLain","3.AntarBank Lain",0};
+	char *menu[]={"REKENING TRANSFER","1.SESAMA BUKOPIN","2.BANK LAIN",0};
 	ret = mnuSelect((Pchar *)menu, 0, 60)%MNUMAX;
 
 	switch (ret)
@@ -4110,6 +4111,9 @@ int PilihJenisRekeningBkpn()
 		case 2:
 			mapPutByte(traSumberRek, 2);
 			break;
+		///case 3:
+		///	mapPutByte(traSumberRek, 2);
+		///	break;
 		default:
 			goto lblKO;
 			break;

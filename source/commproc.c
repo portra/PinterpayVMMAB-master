@@ -137,9 +137,12 @@ int GenSendPacket(void)
 	if(glCommCfg.ucCommType==CT_MODEM)//4212
 	sprintf((char *)szBuff, "600%3.3s3000", glCurTlmTmsAcq.acqNII);
 	else
-	sprintf((char *)szBuff, "600%3.3s0000", glCurTlmTmsAcq.acqNII);
+	///sprintf((char *)szBuff, "600%3.3s0000", glCurTlmTmsAcq.acqNII);
+    sprintf((char *)szBuff, "6000010000", glCurAcq.szNii); // diki add for s900
 #else
-	sprintf((char *)szBuff, "600%3.3s0000", glCurAcq.szNii);
+	////sprintf((char *)szBuff, "600%3.3s0000", glCurAcq.szNii);
+    sprintf((char *)szBuff, "6000010000", glCurAcq.szNii); // diki add for s900
+
 #endif
 	PubAsc2Bcd(szBuff, 10, glSendData.sContent);
 
@@ -784,6 +787,7 @@ if(glProcInfo.stTranLog.ucTranType==PLNPRA){
 		uint n=0,a=0,b=0,i=0,ii=0,headl=5;
 		memcpy(szBuff, &glRecvPack.szBit62[2], 3);
 		if(memcmp(glRecvPack.szBit39, "01", 2)==0){
+			//memcpy(szBuff, &glRecvPack.szBit39[2], 3);
 			memcpy(szBuff, &glRecvPack.szBit48[2], 3);
 		}
 		PubTrimHeadChars(szBuff,'0');

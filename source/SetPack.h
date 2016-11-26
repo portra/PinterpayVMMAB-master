@@ -142,6 +142,9 @@ void setPackPdamBkpn(void);
 void setPackInqSetorTunaiBankBkpn(void);
 void setPackSetorTunaiBankBkpn(void);
 
+void setPackTestHostBkpn(void);
+
+
 
 
 

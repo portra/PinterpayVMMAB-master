@@ -1190,6 +1190,88 @@ int PrnCustomLogo_T(void)
 	return -1;
 }
 
+
+int PrnCustomLogo_Pinterpay(void)
+{
+	uchar	*psLogoData;
+	int		iWidth, iHeigh;
+
+	psLogoData = NULL;
+	GetNowPrnLogoPP(&psLogoData);
+	if (psLogoData!=NULL)
+	{
+		iWidth = 0;
+		iHeigh = 0;
+		GetLogoWidthHeigh(psLogoData, &iWidth, &iHeigh);
+//		hex_dump_char("iWidth", &iWidth, sizeof(int));
+//		hex_dump_char("iHeigh", &iHeigh, sizeof(int));
+		iWidth=384-iWidth;
+		
+		if ((iWidth)<384)
+		{
+			iWidth = (384 -iWidth)/2;	// let logo be printed at center
+		}
+		else
+		{
+			iWidth = 0;
+
+		}
+//		hex_dump_char("iWidth", &iWidth, sizeof(int));
+//		PrnLeftIndent((ushort)iWidth);
+		PrnLeftIndent(0);				//geseran 4212
+		PrnLeftIndent(63);    // diki add geser biar di tengah
+		PrnSetNormal();
+		PrnLogo(psLogoData);
+		PrnLeftIndent(0);
+		PrnStr("\n");
+		return 0;
+	}
+
+	return -1;
+}
+
+
+
+int PrnCustomLogo_Artajasa(void)
+{
+	uchar	*psLogoData;
+	int		iWidth, iHeigh;
+
+	psLogoData = NULL;
+	GetNowPrnLogoAJ(&psLogoData);
+	if (psLogoData!=NULL)
+	{
+		iWidth = 0;
+		iHeigh = 0;
+		GetLogoWidthHeigh(psLogoData, &iWidth, &iHeigh);
+//		hex_dump_char("iWidth", &iWidth, sizeof(int));
+//		hex_dump_char("iHeigh", &iHeigh, sizeof(int));
+		iWidth=384-iWidth;
+		
+		if ((iWidth)<384)
+		{
+			iWidth = (384 -iWidth)/2;	// let logo be printed at center
+		}
+		else
+		{
+			iWidth = 0;
+
+		}
+//		hex_dump_char("iWidth", &iWidth, sizeof(int));
+//		PrnLeftIndent((ushort)iWidth);
+		PrnLeftIndent(0);				//geseran 4212
+		PrnLeftIndent(63);    // diki add geser biar di tengah
+		PrnSetNormal();
+		PrnLogo(psLogoData);
+		PrnLeftIndent(0);
+		PrnStr("\n");
+		return 0;
+	}
+
+	return -1;
+}
+
+
 void PrnHead_T(void)
 {
 	uchar	szBuff[32];
@@ -1490,22 +1572,43 @@ void PrnAmount(uchar *pszIndent, uchar ucNeedSepLine)
 			App_ConvAmountTran(szTotalAmt, szBuff, GA_SEPARATOR);
 			if (ChkIfThermalPrinter())
 			{
-				sprintf((char *)szTempBuff, _T("%sTOTAL     %17.17s\n"), pszIndent, szBuff);
+				if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			 
+				}else{
+					sprintf((char *)szTempBuff, _T("%sTOTAL     %17.17s\n"), pszIndent, szBuff);
+					}
+				//sprintf((char *)szTempBuff, _T("%sTOTAL     %17.17s\n"), pszIndent, szBuff);
 			} 
 			else
 			{
-				sprintf((char *)szTempBuff, "%sTOTAL     %17.17s\n", pszIndent, szBuff);
+				if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			 
+				}else{
+					sprintf((char *)szTempBuff, "%sTOTAL     %17.17s\n", pszIndent, szBuff);
+					}
+				//sprintf((char *)szTempBuff, "%sTOTAL     %17.17s\n", pszIndent, szBuff);
 			}
 		}
 		else
 		{
 			if (ChkIfThermalPrinter())
 			{
-				sprintf((char *)szTempBuff, _T("%sTOTAL\n"), pszIndent);
+
+				if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			 
+				}else{
+					sprintf((char *)szTempBuff, _T("%sTOTAL\n"), pszIndent);
+					}
+				//sprintf((char *)szTempBuff, _T("%sTOTAL\n"), pszIndent);
 			} 
 			else
 			{
-				sprintf((char *)szTempBuff, "%sTOTAL\n", pszIndent);
+				if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			 
+				}else{
+					sprintf((char *)szTempBuff, "%sTOTAL\n", pszIndent);
+					}
+				//sprintf((char *)szTempBuff, "%sTOTAL\n", pszIndent);
 			}
 		}
 		PrnSetBig();
@@ -1526,11 +1629,21 @@ void PrnAmount(uchar *pszIndent, uchar ucNeedSepLine)
 		memset(szTempBuff, 0, sizeof(szTempBuff));
 		if (ChkIfThermalPrinter())
 		{
-			sprintf((char *)szTempBuff, _T("%sTOTAL     %14.14s\n"), pszIndent, szBuff);
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			 
+				}else{
+					sprintf((char *)szTempBuff, _T("%sTOTAL     %14.14s\n"), pszIndent, szBuff);
+					}
+			//sprintf((char *)szTempBuff, _T("%sTOTAL     %14.14s\n"), pszIndent, szBuff);
 		} 
 		else
 		{
-			sprintf((char *)szTempBuff, "%sTOTAL     %14.14s\n", pszIndent, szBuff);
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			 
+				}else{
+					sprintf((char *)szTempBuff, "%sTOTAL     %14.14s\n", pszIndent, szBuff);
+					}
+			//sprintf((char *)szTempBuff, "%sTOTAL     %14.14s\n", pszIndent, szBuff);
 		}
 		PrnSetBig();
 		MultiLngPrnStr(szTempBuff, DISP_LINE_LEFT);

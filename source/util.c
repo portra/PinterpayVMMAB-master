@@ -244,7 +244,12 @@ static void DispIndicator(void)
 {
 
 	//ScrPrint(0, 7, ASCII, "ATM BERSAMA	   PRIMA");  // menu display SCM EDC
+	ScrPrint(0, 6, ASCII, "ACQUIRED BY:");  // menu display SCM EDC
 	ScrPrint(0, 7, ASCII, "BUKOPIN - ATMB -PRIMA");  // menu display SCM EDC
+	//ScrPrint(0, 2, CFONT, "%-16.16s", "SCM");
+	//ScrPrint(0, 2, CFONT, "%s", "      SCM");
+	////PubDispString(_T("SCM"), 5|DISP_LINE_CENTER);
+	///ScrPrint(0, 7, ASCII, "ATM BERSAMA  -  PRIMA");  // menu display SCM EDC
 
 #ifdef APP_DEBUG
 	ScrPrint(0, 2, ASCII, "DEBUG");
@@ -274,11 +279,13 @@ void DispSwipeCard(uchar bShowLogo)
 //* //4212
 	if( ChkIfEmvEnable() )
 	{
-		pszStr = _T_NOOP("SWIPE/INSERT/TAP ...");
+		//pszStr = _T_NOOP("SWIPE/INSERT/TAP ...");
+		pszStr = _T_NOOP("");
 	}
 	else
 	{
-		pszStr = _T_NOOP("PLS SWIPE CARD");
+		//pszStr = _T_NOOP("PLS SWIPE CARD");
+		pszStr = _T_NOOP("");
 	}
 //*/
 	if (bShowLogo)

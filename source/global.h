@@ -37,6 +37,8 @@ Please check below macro definition before compile
 // #define _P58_
 #define _S_SERIES_	//irf, 20121128
 //#define _SP30_
+#define _Sxxx_	//Diki add for s900 , tapi disamain kyk sxx series di atas!
+
 
 /*********************************************************************************
 设定各项特性开启/关闭
@@ -303,6 +305,8 @@ enum {PED_INT_PXX, PED_INT_PCI, PED_EXT_PP, PED_EXT_PCI};
 #define _TERMINAL_S60_	   9
 #define _TERMINAL_S90_	   10
 #define _TERMINAL_S58_	   14
+#define _TERMINAL_S900_	   22
+
 
 // #define EPSAPP_UPDATEPARAM		100
 // #define EPSAPP_GENSUBINFO		110
@@ -2217,10 +2221,12 @@ typedef struct _tagSYS_CONTROL							//same like reg in ingedev
 	// diki add for mini atm bukopin
 	uchar			szNoKartuBkpn1[40+1];  // rack 2
 	uchar			szNoKartuBkpn2[19+1];  // PAN
+	uchar			szNoRekeningBkpn[20+1];  // no rek merchant Bukopin
+	uchar			szNoRekeningBkpn2[20+1];  // no rek merchant Bukopin
 
 
 	// diki add for ATMB / ARTAJASA
-	uchar			szNoRekeningAj[40+1];  // no rek merchant
+	uchar			szNoRekeningAj[40+1];  // no rek merchant ATMBersama
 
 #ifdef __TELIUM_PARAM__
 	TLM_APP			stTlmApp;

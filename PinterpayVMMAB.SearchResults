@@ -1,6 +1,58 @@
----- case TRANS_TYPE_AJ_PAY: Matches (5 in 4 files) ----
-Artajasa.c (source):		//case TRANS_TYPE_AJ_PAY:
-Fileoper.c (source):			case TRANS_TYPE_AJ_PAY:
-miniATM.c (source):		case TRANS_TYPE_AJ_PAY:
-miniATM.c (source):			case TRANS_TYPE_AJ_PAY:
-Util.c (source):		case TRANS_TYPE_AJ_PAY:	
+---- pinterpay Matches (61 in 16 files) ----
+Artajasa.c (source):int MenuPinterpay(void)
+Artajasa.c (source):		iRet = MenuPinterpayPulsaElektrik();
+Artajasa.c (source):		iRet = MenuPinterpayPpob();
+Artajasa.c (source):int MenuPinterpayPulsaElektrik(void)
+Artajasa.c (source):		iRet = MenuPinterpayPulsaElektrikPulsa();
+Artajasa.c (source):int MenuPinterpayPulsaElektrikPulsa(void)
+Artajasa.c (source):int MenuPinterpayPpob(void)
+Artajasa.h (source):int MenuPinterpay(void);
+Artajasa.h (source):int MenuPinterpayPulsaElektrik(void);
+Artajasa.h (source):int MenuPinterpayPulsaElektrikPulsa(void);
+Artajasa.h (source):int MenuPinterpayPpob(void);
+Commproc.c (source):	}else if(glProcInfo.stTranLog.ucTranType==INQPINTERPAY||glProcInfo.stTranLog.ucTranType==PINTERPAY||glProcInfo.stTranLog.ppaj>0){
+Dft.h (source):    "1 PINTERPAY", //mnuUtamaPinterpay
+Eventmsg.c (source):			/////PinterPayMenu();
+Eventmsg.c (source):			////PinterPayMenu();
+Global.c (source):	//resza add for Pinterpay ATA
+Global.c (source):	{_T_NOOP("INQPINTERPAY"),   "0100", "860000", 0},
+Global.c (source):	{_T_NOOP("PINTERPAY"),	    "0200", "860000", PRN_RECEIPT+ACT_INC_TRACE+IN_SALE_TOTAL+NEED_REVERSAL+WRT_RECORD},
+Global.h (source)://Pinterpay Max response parameter
+Global.h (source)://Pinterpay
+Hdl.c (source):		case mnuUtamaPinterpay:
+Hdl.c (source):				/////MenuPinterpay();
+Hdl.c (source):				PinterPayMenu();
+Key.h (source):				mnuUtamaPinterpay,
+Menu.c (source):	return TransInqPinterpay();
+Menu.c (source):int PinterPayMenu(void)
+Menu.c (source):		TransInqPinterpay();
+Menu.c (source):		iRet = TransPinterpay("PINTERPAY");
+Menu.c (source):		iRet = TransPinterpay("PINTERPAY");
+Menu.h (source):int PinterPayMenu(void);
+Mlogo.c (source):unsigned char sPinterpay_DISP_P[]={
+Mlogo.c (source):		*ppsData = sPinterpay_DISP_P;
+Mlogo.c (source):		*ppsData = sPinterpay_DISP_P;
+Print.c (source):		} else if( glProcInfo.stTranLog.ucTranType==PINTERPAY)
+Print.c (source):			//sprintf((char *)szBuff, "%s \n ", _T("  PINTERPAY"));
+Tranproc.c (source):	if( glProcInfo.stTranLog.ucTranType==INQPINTERPAY)
+Tranproc.c (source):		if( glProcInfo.stTranLog.ucTranType==PINTERPAY)
+Tranproc.c (source)://Pinterpay{
+Tranproc.c (source):		if((glProcInfo.stTranLog.ppaj<=0&&glProcInfo.stTranLog.ucTranType!=PPAYAJ)||(glProcInfo.stTranLog.ppaj<=0&&glProcInfo.stTranLog.ucTranType!=PINTERPAY)||glProcInfo.stTranLog.ucTranType!=PPAYAJ){
+Tranproc.c (source):int AfterTranPinterpay(){
+Tranproc.c (source)://PinterPay}
+Tranproc.c (source):		iRet=AfterTranPinterpay();
+Tranproc.c (source):int TransInqPinterpay(){
+Tranproc.c (source):	iRet = TransInit(INQPINTERPAY);
+Tranproc.c (source):int TransPinterpay(){
+Tranproc.c (source):	iRet = TransInit(PINTERPAY);
+Tranproc.c (source):		iRet = AfterTranPinterpay();
+Tranproc.c (source):		iRet = AfterTranPinterpay();
+Tranproc.c (source):		iRet = AfterTranPinterpay();
+Tranproc.c (source):		iRet = AfterTranPinterpay();
+Tranproc.h (source):	INQPINTERPAY,
+Tranproc.h (source):	PINTERPAY,
+Tranproc.h (source)://Pinterpay
+Tranproc.h (source):int TransInqPinterpay();
+Tranproc.h (source):int TransPinterpay();
+Util.c (source):		case INQPINTERPAY:
+Util.c (source):		case PINTERPAY:

@@ -1660,7 +1660,18 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 					TransAtmbMerchantNasabahMenuFalse();
 					hdlSubmenu(MnuItm,mnuEnd);
 					break;
+					
 
+		// SCM 
+		/*
+		case mnuUtamaPurchaseScm:
+				TransAtmbMerchantNasabahMenuFalse();
+				MenuAtmbArtajasa();
+				CommOnHook(FALSE);	//disconnect
+				break;
+				*/
+
+	 /*
 		case mnuUtamaPinterpay:
 				//hdlSubmenu(mnuUtamaATMBAwal,mnuEnd);
 				TransAtmbMerchantNasabahMenuFalse();
@@ -1668,6 +1679,31 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 				PinterPayMenu();
 				CommOnHook(FALSE);	//disconnect
 				break;
+				*/
+
+		case mnuUtamaPinterpayPoinTrans:
+				//hdlSubmenu(mnuUtamaATMBAwal,mnuEnd);
+				TransAtmbMerchantNasabahMenuFalse();
+				/////MenuPinterpay();
+				TransInqPinterpay();
+				CommOnHook(FALSE);	//disconnect
+				break;
+		case mnuUtamaPinterpayPulsaElektrik:
+				//hdlSubmenu(mnuUtamaATMBAwal,mnuEnd);
+				TransAtmbMerchantNasabahMenuFalse();
+				/////MenuPinterpay();
+				TransactionInqueryMenu();
+				CommOnHook(FALSE);	//disconnect
+				break;
+				
+		case mnuUtamaPinterpayPPOB:
+				//hdlSubmenu(mnuUtamaATMBAwal,mnuEnd);
+				TransAtmbMerchantNasabahMenuFalse();
+				/////MenuPinterpay();
+				PpobMenu();
+				CommOnHook(FALSE);	//disconnect
+				break;
+
 
 		case mnuUtamaATMB:
 				//hdlSubmenu(mnuUtamaATMBAwal,mnuEnd);
@@ -1675,6 +1711,7 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 				MenuAtmbArtajasa();
 				CommOnHook(FALSE);	//disconnect
 				break;
+				
 
 		////case mnuUtamaATMBAwal:
 			////TransAjPurchase();
@@ -1683,7 +1720,9 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 
 
 		case mnuUtamaMiniAtm:
-				hdlSubmenu(mnuMiniAtmBkpn,mnuSetupBkpn);
+				/////hdlSubmenu(mnuMiniAtmBkpn,mnuSetupBkpn);
+				TransAtmbMerchantNasabahMenuFalse();
+				hdlSubmenu(mnuMiniAtmBkpnNas,mnuVoid);
 				break;
 
 		case mnuSale:
@@ -1819,30 +1858,41 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 // ************ ADD FOR MINI ATM BUKOPIN (DIKI) ********
 ///********************************************************
 		case mnuMiniAtmBkpn:
-				hdlSubmenu(MnuItm,mnuSetorBkpn);
+				hdlSubmenu(MnuItm,mnuTransferBkpn);
 				break;
 
 		case mnuMiniAtmBkpnMer:
 			//MenuAtmbMerchantNasabah = TRUE;
 				TransAtmbMerchantNasabahMenuTrue();
-				hdlSubmenu(MnuItm,mnuVoid);
+				hdlSubmenu(MnuItm,mnuUtamaKartuKreditAwal);
 				break;
 
 		case mnuMiniAtmBkpnNas:
 			////MenuAtmbMerchantNasabah= FALSE;
 				TransAtmbMerchantNasabahMenuFalse();
-				hdlSubmenu(MnuItm,mnuVoid);
+				hdlSubmenu(MnuItm,mnuUtamaKartuKreditAwal);
 				break;
 
+			/*
 			case mnuSetorBkpn:
-				TransSetorTunaiBkpn();
+				/////TransSetorTunaiBkpn();
+				DisplayNotActive();
 				CommOnHook(FALSE);
 				break;
+			*/
 
+			/*
 			case mnuTarikBkpn:
-				TransTarikTunaiBkpn();
-				CommOnHook(FALSE);
-				break;					
+				/////TransTarikTunaiBkpn();
+				///DisplayNotActive();
+				///CommOnHook(FALSE);
+				TransAtmbMerchantNasabahMenuFalse();
+				MenuAtmbArtajasa();
+				CommOnHook(FALSE);	//disconnect
+				break;
+
+				*/
+				
 		
 			case mnuTransferBkpn:
 	  			TransTrfAntarBankBkpn();
@@ -1850,7 +1900,8 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 				break;
 
 			case mnuPembelianBkpn:
-				hdlSubmenu(MnuItm,mnuPln2Bkpn);
+				///hdlSubmenu(MnuItm,mnuInformasiBkpn);
+				DisplayNotActive();
 				break;
 		
 				case mnuEvoucherBkpn:
@@ -1886,7 +1937,8 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 					
 
 			case mnuPembayaranBkpn:
-				hdlSubmenu(MnuItm,mnuPembelianBkpn);
+				///hdlSubmenu(MnuItm,mnuPembelianBkpn);
+				DisplayNotActive();
 				break;
 		
 				case mnuPln1Bkpn:
@@ -2011,8 +2063,19 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 	  				MiniAtmRePrnSpecTransBkpn();
 					break;
 
+			case mnuBayarAdmin:
+				///hdlSubmenu(MnuItm,mnuCetakUlangBkpn);
+				DisplayNotActive();
+				break;
+		
+				case mnuBayarAdminBeliRoll:
+	  				MenuMatmBkpnRoll();
+					CommOnHook(FALSE);
+					break;
+
 
 			case mnuLaporanBkpn:
+				/*
 				if(MenuAtmbMerchantNasabah)
 				{
 				}
@@ -2024,6 +2087,7 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 					return 0;
 					break;
 					}
+				*/
 				//break;
 				hdlSubmenu(MnuItm, mnuLainlainBkpn);
 				break;
@@ -2042,11 +2106,17 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 
 
 			case mnuInformasiBkpn:
-				hdlSubmenu(MnuItm,mnuCetakUlangBkpn);
+				hdlSubmenu(MnuItm,mnuBayarAdmin);
 				break;
 		
 				case mnuInfoSaldoBkpn:
 	  				TransInfoSaldoBkpn();
+					CommOnHook(FALSE);
+					break;
+
+					// mnuTestHostBkpn
+				case mnuTestHostBkpn:
+	  				TransTestHostBkpn();
 					CommOnHook(FALSE);
 					break;
 
@@ -2057,6 +2127,8 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 
 				case mnuInfoTransaksiBkpn:
 	  				///TransMultifinanceBkpn();
+	  				DisplayNotActive();
+	  				CommOnHook(FALSE);
 					break;
 
 
@@ -2072,10 +2144,13 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 		
 				case mnuUbahBahasaBkpn:
 					//TransInfoKodeBankBkpn();
+					DisplayNotActive();
+					CommOnHook(FALSE);
 					break;
 					
 
 			case mnuSetupBkpn:
+				/*
 				if(MenuAtmbMerchantNasabah)
 				{
 				}
@@ -2087,15 +2162,99 @@ int hdlSelect(word MnuItm)	//irf,  02 Jan 2014
 					return 0;
 					break;
 					}
-				hdlSubmenu(MnuItm,mnuUtamaKartuKreditAwal);
+				*/
+
+				if( PasswordTerm()!=0 )
+				{
+					//return;
+					CommOnHook(FALSE);
+					break;
+				}
+				
+				hdlSubmenu(MnuItm,mnuSetupAtmb);
 				break;
 					
 				case mnuInitKartuBukopin:
-				//xxx	TransInitKartuBkpn();
+					TransInitKartuBkpn();
 					CommOnHook(FALSE);
 					break;
-					
 
+				case mnuInitNorekBukopin:
+					TransInitNorekBkpn();
+					CommOnHook(FALSE);
+					break;
+
+				case mnuInitNorekBukopin2:
+					TransInitNorekBkpn2();
+					CommOnHook(FALSE);
+					break;
+
+
+			case mnuSetupAtmb:
+
+				if( PasswordTerm()!=0 )
+				{
+					//return;
+					CommOnHook(FALSE);
+					break;
+				}
+
+					TransAtmbMerchantNasabahMenuFalse();
+					/////MenuPinterpay();
+					MenuAtmbArtajasaFunction();
+					CommOnHook(FALSE);	//disconnect
+
+					break;
+					
+			///
+			case mnuClearReversalBkpn:
+
+				if( PasswordVoid()!=0 )
+				{
+					//return;
+					CommOnHook(FALSE);
+					break;
+				}
+
+					TransAtmbMerchantNasabahMenuFalse();
+					/////MenuPinterpay();
+					ClearReversal();
+					CommOnHook(FALSE);	//disconnect
+
+					break;
+
+			case mnuClearBatchBkpn:
+
+				if( PasswordVoid()!=0 )
+				{
+					//return;
+					CommOnHook(FALSE);
+					break;
+				}
+
+					TransAtmbMerchantNasabahMenuFalse();
+					/////MenuPinterpay();
+					ClearAllRecord();
+					CommOnHook(FALSE);	//disconnect
+
+					break;
+
+			case mnuSetKoneksiBkpn:
+
+				if( PasswordTerm()!=0 )
+				{
+					//return;
+					CommOnHook(FALSE);
+					break;
+				}
+
+					TransAtmbMerchantNasabahMenuFalse();
+					
+					SetSysCommParam(PM_MEDIUM);
+					CommOnHook(FALSE);	//disconnect
+
+					break;
+					
 
 				/*
 	  		case mnuPlnBkpn:

@@ -295,7 +295,15 @@ int PrnReceipt(uchar ucPrnFlag)
 		PrnSetNormal();
 
 		//LOGO
-		PrnCustomLogo_T();
+		/////PrnCustomLogo_T();
+
+		if(glProcInfo.stTranLog.ucTranType==PULSA||glProcInfo.stTranLog.ucTranType==INQTRANS||glProcInfo.stTranLog.ucTranType==PPOB){
+			PrnCustomLogo_Pinterpay();
+			//PrnCustomLogo_T();
+		}else{
+			PrnCustomLogo_T();
+		}
+		
 
 		//SITE NAME & ADDRESS
 		PrnHeader();

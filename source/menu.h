@@ -49,6 +49,12 @@ int TelkomselMenu(void);
 int ThreeMenu(void);
 int XlMenu(void);
 
+
+int TransactionInqueryMenu(void);
+int PpobMenu(void);
+
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

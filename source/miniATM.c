@@ -20680,8 +20680,1841 @@ int TransInitKartuBkpn(void)
 
 
 
+int TransInitNorekBkpn(void)
+{
+	int		iRet;
+	uchar	ucEntryMode=0;
+	char		bit48Req[16+1];
+	word	mnuItm;
+	uchar 	ucRet;
+	char	noRek[28+1];
+
+	strcpy(glProcInfo.stTranLog.szTransName,"NO REK BUKOPIN");
+	
+	MEM_ZERO(noRek);
+	
+		ScrCls();
+					//DispTransName();
+					ScrPrint(0, 0, CFONT|REVER, "%-16.16s", "INPUT NO REK");
+					PubDispString("NO REKENING", DISP_LINE_LEFT|2);
+					PubDispString("BUKOPIN:", DISP_LINE_LEFT|4);
+					ucRet = PubGetString(NUM_IN, 5, 16, noRek, USER_OPER_TIMEOUT);
+					if( ucRet!=0 )
+					{
+						return ERR_USERCANCEL;
+					}
+					
+					MEM_ZERO(glSysCtrl.szNoRekeningBkpn);
+	
+					sprintf((char *)glSysCtrl.szNoRekeningBkpn,noRek);
+					
+					SaveSysCtrlBase();
+			
+		ScrCls();
+		PubDispStringASCII("INPUT NO REK", DISP_LINE_CENTER|0);
+		PubDispStringASCII("SUKSES", DISP_LINE_LEFT|3);
+		ucRet= PubYesNoFNUP(5);
+		if(ucRet!=0)
+			return 0;
+		
+	
+	
+		return 0;
+
+}
 
 
+int TransInitNorekBkpn2(void)
+{
+	int		iRet;
+	uchar	ucEntryMode=0;
+	char		bit48Req[16+1];
+	word	mnuItm;
+	uchar 	ucRet;
+	char	noRek[28+1];
+
+	strcpy(glProcInfo.stTranLog.szTransName,"NO REK BUKOPIN");
+	
+	MEM_ZERO(noRek);
+	
+		ScrCls();
+					//DispTransName();
+					ScrPrint(0, 0, CFONT|REVER, "%-16.16s", "INPUT NO REK");
+					PubDispString("NO REKENING", DISP_LINE_LEFT|2);
+					PubDispString("BUKOPIN:", DISP_LINE_LEFT|4);
+					ucRet = PubGetString(NUM_IN, 5, 16, noRek, USER_OPER_TIMEOUT);
+					if( ucRet!=0 )
+					{
+						return ERR_USERCANCEL;
+					}
+					
+					MEM_ZERO(glSysCtrl.szNoRekeningBkpn2);
+	
+					sprintf((char *)glSysCtrl.szNoRekeningBkpn2,noRek);
+					
+					SaveSysCtrlBase();
+			
+		ScrCls();
+		PubDispStringASCII("INPUT NO REK", DISP_LINE_CENTER|0);
+		PubDispStringASCII("SUKSES", DISP_LINE_LEFT|3);
+		ucRet= PubYesNoFNUP(5);
+		if(ucRet!=0)
+			return 0;
+		
+	
+	
+		return 0;
+
+}
+
+
+
+
+
+
+int TransTestHostBkpn(void)
+{
+	int		iRet;
+	uchar 	ucRet;
+	ulong 	lenData;
+	uchar	ucEntryMode=0;
+	char 	bit48Rsp[lenBit48+1];
+	char 	saldo[16+1];
+	char 	saldoFmt[20+1];
+	char 	nama[20+1];
+	char screenJumlah[22+1];
+
+	MEM_ZERO(bit48Rsp);
+	MEM_ZERO(saldo);
+	MEM_ZERO(saldoFmt);
+	MEM_ZERO(nama);
+	MEM_ZERO(screenJumlah);
+
+	strcpy(glProcInfo.stTranLog.szTransName,"TEST HOST");
+
+	ucRet = FindAcqIdxByName("BKPN_MATM", FALSE);
+	if(ucRet==MAX_ACQ)
+		return;
+
+	SetCurAcq(ucRet);
+
+	iRet = TransInit(TRANS_TYPE_INFO_SALDO_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+	/*
+	ucEntryMode = CARD_SWIPED|SKIP_CHECK_ICC;
+	
+	if(!ucEntryMode)
+	{
+		return ERR_NO_DISP;
+	}
+	
+	iRet = GetCard(ucEntryMode);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+		
+	//GET PIN
+	ScrCls();
+	DispTransName();
+	//iRet = GetPIN_Manual(FALSE);	//get pin
+	iRet = GetPIN_Manual_MiniAtmBkpn(FALSE);	//get pin
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+	*/
+
+	//SET ISO 8583
+	setPackTestHostBkpn();
+
+	//SEND REVERSAL
+	iRet = TranReversal();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+
+	//displayResponse();
+
+
+	ScrCls();
+	PubBeepOk();
+	PubDispStringASCII("", DISP_LINE_CENTER|0);
+	PubDispStringASCII("SERVER:", DISP_LINE_CENTER|2);
+	PubDispStringASCII("SIAP TRANSAKSI", DISP_LINE_CENTER|3);
+	PubWaitKey(5);
+	
+
+	//CHECK RESPONSE FROM HOST
+	/*
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		return ERR_NO_DISP;
+	}
+	*/
+
+	//DISCONNECT FROM HOST
+ 	CommOnHook(FALSE);
+
+	return 0;
+}
+
+
+
+int TransTrfAntarBankBkpnMerchant(void)
+{
+	int		ret;
+	int		iRet;
+	uchar 	ucRet;
+	char 	bit48Rsp[lenBit48+1];
+	char 	nama[30+1];
+	ulong 	lenData;
+	uchar	ucEntryMode=0;
+
+	char 	bit48Req[148+1];
+	char		KodeBank[148+1];
+	char 	noRek[28+1];
+	char		noRef[16+1];
+
+	char 	bankAsal[20+1];
+	char 	bankTujuan[20+1];
+	char 	uang[12+1];
+	char		uangFmt[20+1];
+
+	char 	norekAsal[28+1];
+
+	char screenUang[21+1];
+	char screenBankAsal[21+1];
+	char screenBankTujuan[21+1];
+	char screenNoRek[21+1];
+	char screenNoRef[21+1];
+
+	
+	char 	bit103Req[28+1];
+	char 	bit102Rsp[28+1];
+	char 	bit103Rsp[28+1];
+
+	char 	bankTujuanFinal[28+1];
+
+	char	ListKodeBank[20+1];
+	char	ListNamaBank[20+1];
+
+	uchar	ucKey;
+
+	byte jenisRekening;
+	//mapGetByte(traSumberRek, jenisRekening);
+
+	MEM_ZERO(screenUang);
+	MEM_ZERO(screenBankAsal);
+	MEM_ZERO(screenBankTujuan);
+	MEM_ZERO(screenNoRek);
+	MEM_ZERO(screenNoRef);
+
+	MEM_ZERO(bankTujuanFinal);
+
+	MEM_ZERO(ListKodeBank);
+	MEM_ZERO(ListNamaBank);
+
+	strcpy(glProcInfo.stTranLog.szTransName,"BAYAR PENJUALAN");
+			
+	iRet = TransInit(TRANS_TYPE_INQ_TRFANTARBANK_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	ucEntryMode = CARD_SWIPED|SKIP_CHECK_ICC;
+	
+	if(!ucEntryMode)
+	{
+		return ERR_NO_DISP;
+	}
+
+
+	/*
+	
+	iRet = GetCard(ucEntryMode);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	*/
+	
+	////// diki add komen   RUN_FUNCTION(PilihJenisRekening, lblKO);
+	///RUN_FUNCTION(PilihJenisRekeningBkpn, lblKO);
+	mapPutByte(traSumberRek, 2);
+
+	MEM_ZERO(bit48Req);
+	MEM_ZERO(KodeBank);
+	MEM_ZERO(noRek);
+	MEM_ZERO(noRef);
+
+	MEM_ZERO(bit103Req);
+	
+	mapGetByte(traSumberRek, jenisRekening);
+	switch(jenisRekening)
+		{
+		case 1:
+			ScrCls();
+			iRet = GetCard(ucEntryMode);
+				if( iRet!=0 )
+				{
+					return iRet;
+				}
+	
+			ScrCls();
+			DispTransName();
+			PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+			PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			////memcpy(bit48Req+3,noRek,strlen(noRek));
+			//memcpy(bit103Req,noRek,strlen(noRek));
+			
+			memcpy(bankTujuanFinal,"00",2);
+			strcat(bankTujuanFinal,noRek);
+
+			memcpy(bit103Req,bankTujuanFinal,strlen(bankTujuanFinal));
+
+
+			
+			break;
+		case 2:
+
+			ScrCls();
+			iRet = GetCard(ucEntryMode);
+				if( iRet!=0 )
+				{
+					return iRet;
+				}
+
+
+			memcpy(KodeBank,"441",3);
+		fmtPad(KodeBank, 20, ' ');
+		memcpy(bit48Req,KodeBank,strlen(KodeBank));
+
+		memcpy(bit103Req,glSysCtrl.szNoRekeningBkpn,strlen(glSysCtrl.szNoRekeningBkpn));
+	
+			
+		/*
+		while(1)
+		{
+			ScrCls();
+			//DispTransName();
+			PubDispString("LIHAT DAFTAR:", DISP_LINE_LEFT|0);
+			PubDispString("KODE BANK ?", DISP_LINE_LEFT|2);
+			PubDispString("NO       YES", DISP_LINE_LEFT|6);
+			
+		ucKey = PubWaitKey(30);
+			if ((ucKey==KEYENTER) || (ucKey==KEYUP) || (ucKey==KEYDOWN))
+			{
+			//TransInfoKodeBankBkpn();
+			TransInfoKodeBankBkpn2();
+			//continue;
+			}
+			else 
+				{
+				break;
+				}
+		}
+
+
+			ScrCls();
+			DispTransName();
+			PubDispString("MASUKKAN", DISP_LINE_LEFT|2);
+			PubDispString("KODE BANK :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 3,10 , KodeBank, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			fmtPad(KodeBank, 20, ' ');
+
+			memcpy(bit48Req,KodeBank,strlen(KodeBank));
+			//memcpy(bit48Req+3,"                                                                                                                                                ",144);
+			//memcpy(bit103Req,KodeBank,strlen(KodeBank));
+
+			ScrCls();
+			DispTransName();
+			PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+			PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			////memcpy(bit48Req+3,noRek,strlen(noRek));
+			///memcpy(bit103Req+3,noRek,strlen(noRek));
+			memcpy(bit103Req,noRek,strlen(noRek));
+			*/
+			break;
+		}
+
+
+	/*
+	ScrCls();
+	DispTransName();
+	PubDispString("KODE BANK :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 3,3 , KodeBank, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	///memcpy(bit48Req,KodeBank,strlen(KodeBank));
+	memcpy(bit103Req,KodeBank,strlen(KodeBank));
+
+	ScrCls();
+	DispTransName();
+	PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+	PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	////memcpy(bit48Req+3,noRek,strlen(noRek));
+	memcpy(bit103Req+3,noRek,strlen(noRek));
+	*/
+
+	
+	iRet = InputUangBkpn();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+	
+
+	/*
+	ScrCls();
+	DispTransName();
+	PubDispString("CUST REF NUMBER", DISP_LINE_LEFT|2);
+	PubDispString("ATAU LANJUT  :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 0, 16, noRef, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	memcpy(bit48Req+23,noRef,strlen(noRef));
+	*/
+	strcpy(glProcInfo.szReq48,bit48Req);
+	strcpy(glProcInfo.szReq103,bit103Req);
+
+	//GET PIN
+	ScrCls();
+	DispTransName();
+	iRet = GetPIN_Manual_MiniAtmBkpn(FALSE);	//get pin
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SET ISO 8583
+	////// diki add komen  setPackInqTransferAntarBank();
+	setPackInqTransferAntarBankBkpn();
+
+	//SEND REVERSAL
+	iRet = TranReversal();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+
+	displayResponse();
+
+	//CHECK RESPONSE FROM HOST
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		displayResponse();
+		return ERR_NO_DISP;
+	}
+
+	MEM_ZERO(bit48Rsp);
+	MEM_ZERO(bit102Rsp);
+	MEM_ZERO(bit103Rsp);
+	//bit102Rsp
+
+	// Overbook / Fund Transfer BIT 48 Respone
+	// Destination bank 	AN 20 	left, pad blank
+	// Destination branch	AN 20 	left, pad blank
+	// Transfer media 		N 1 		1:llg, 2:rtgs, 3:fund transfer
+	// Destination name	AN 30 	left, pad blank
+	// Current balance		N-16, 2 	right, pad zerro
+	// Transfer messsage	AN 60 	left, pad blank
+	
+	PubChar2Long(glRecvPack.szBit48, 2, &lenData);
+	memcpy(bit48Rsp, glRecvPack.szBit48+2, lenData);
+	mapPutStr(traResponseInq,bit48Rsp);
+
+	PubChar2Long(glRecvPack.szField102, 2, &lenData);
+	memcpy(bit102Rsp, glRecvPack.szField102+2, lenData);
+
+	PubChar2Long(glRecvPack.szField103, 2, &lenData);
+	memcpy(bit103Rsp, glRecvPack.szField103+2, lenData);
+
+	MEM_ZERO(nama);
+	MEM_ZERO(bankAsal);
+	MEM_ZERO(bankTujuan);
+	MEM_ZERO(norekAsal);
+
+	memcpy(ListKodeBank,bit48Rsp,3);
+	TransInfoKodeBankBkpnPilih(ListNamaBank, ListKodeBank);
+	memcpy(bankTujuan,ListNamaBank,strlen(ListNamaBank));
+	
+	
+	////memcpy(bankTujuan,bit48Rsp+20,20);
+	//memcpy(bankTujuan,bit48Rsp+45,15);
+	//memcpy(nama,bit48Rsp+40,20);
+
+	//memcpy(norekAsal,bit102Rsp,28);
+	//memcpy(noRek,bit103Rsp,28);
+	switch(jenisRekening)
+		{
+		case 1:
+			memcpy(norekAsal,bit102Rsp+2,26);
+			memcpy(noRek,bit103Rsp+2,26);
+			memcpy(nama,bit48Rsp+40,20);
+			break;
+		case 2:
+			memcpy(norekAsal,bit102Rsp,28);
+			memcpy(noRek,bit103Rsp,28);
+			memcpy(nama,bit48Rsp+41,20);
+			break;
+		}
+	
+
+	MEM_ZERO(uang);
+	MEM_ZERO(uangFmt);
+	memcpy(uang,glProcInfo.stTranLog.szAmount,10);
+	fmtAmt(uangFmt,uang,0,",.");
+	sprintf(screenUang,"Rp. %s",uangFmt);
+
+	/*
+	ScrCls();
+	PubDispStringASCII("BAYAR PENJUALAN", DISP_LINE_CENTER|0);
+	///PubDispStringASCII("TRANSFER ANTAR BANK", DISP_LINE_CENTER|0);
+	///PubDispStringASCII("Bank Asal :", DISP_LINE_LEFT|1);
+	///PubDispStringASCII(bankAsal, DISP_LINE_LEFT|2);
+	PubDispStringASCII("No.Rek Asal :", DISP_LINE_LEFT|1);
+	PubDispStringASCII(norekAsal, DISP_LINE_LEFT|2);
+	PubDispStringASCII("Bank Tujuan :", DISP_LINE_LEFT|3);
+	PubDispStringASCII(bankTujuan, DISP_LINE_LEFT|4);
+	PubDispStringASCII("Rek Tujuan  :", DISP_LINE_LEFT|5);
+	PubDispStringASCII(noRek, DISP_LINE_LEFT|6);
+	PubDispStringASCII("Keluar  Lanjut", DISP_LINE_RIGHT|7);
+
+	ucRet= PubYesNoFNUP(USER_INPUT_TIMEOUT);
+	if(ucRet!=0)
+		return 0;
+	*/
+
+	ScrCls();
+	PubDispStringASCII("BAYAR PENJUALAN", DISP_LINE_CENTER|0);
+	PubDispStringASCII("BANK LAIN", DISP_LINE_CENTER|1);
+	PubDispStringASCII("No.Rek Asal :", DISP_LINE_LEFT|2);
+	PubDispStringASCII(norekAsal, DISP_LINE_LEFT|3);
+	//PubDispStringASCII("Nama :", DISP_LINE_LEFT|0);
+	//PubDispStringASCII(nama, DISP_LINE_LEFT|1);
+	///PubDispStringASCII("Cust Ref No :", DISP_LINE_LEFT|2);
+	///PubDispStringASCII(noRef, DISP_LINE_LEFT|3);
+	PubDispStringASCII("Jumlah :", DISP_LINE_LEFT|4);
+	PubDispStringASCII(screenUang, DISP_LINE_RIGHT|5);
+	PubDispStringASCII("Keluar  Lanjut", DISP_LINE_RIGHT|7);
+
+	ucRet= PubYesNoFNUP(USER_INPUT_TIMEOUT);
+	if(ucRet!=0)
+		return 0;
+	
+	//iRet = TransInit(TRANS_TYPE_INQ_TRFANTARBANK_BKPN);
+	// TRANS_TYPE_TRFANTARBANK_BKPN
+	iRet = TransInit(TRANS_TYPE_TRFANTARBANK_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+
+	strcpy(glProcInfo.szReq48,bit48Rsp);
+	//strcpy(glProcInfo.szReq102,bit102Rsp);
+	strcpy(glProcInfo.szReq103,bit103Rsp);
+
+
+	///// UPDATE MINI ATM BUKOPIN FOR TRANSFER ANTAR BANK!!!  UPDATE!
+	switch(jenisRekening)
+			{
+			case 1:
+				strcpy(glProcInfo.szReq102,bit102Rsp);
+			
+				break;
+			case 2:
+				strcpy(glProcInfo.szReq102,"10");
+				break;
+			}
+	
+
+
+	
+	////// diki add komen  setPackTransferAntarBank();
+	setPackTransferAntarBankBkpn();
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+	displayResponse();
+
+	//CHECK RESPONSE FROM HOST
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		return ERR_NO_DISP;
+	}
+
+	////// diki add komen unPackTransfer_AntarBank();
+	unPackTransfer_AntarBankBkpn();
+
+	//SAVE TRANSACTION
+	if( ChkIfSaveLog() )
+	{
+		SaveMiniAtmTranLog(&glProcInfo.stTranLog);
+		GetNewInvoiceNo();
+	}
+
+
+	/*
+	//SAVE TRANSACTION
+	if( ChkIfSaveLog() )
+	{
+		SaveTranLog(&glProcInfo.stTranLog);
+		GetNewInvoiceNo();
+	}
+	*/
+
+	//CLEAR REVERSAL
+	SaveRevInfo(FALSE);
+	
+	//DISCONNECT FROM HOST
+    CommOnHook(FALSE);
+
+
+	//PRINT RECEIPT
+	if( ChkIfPrnReceipt() )
+	{
+		DispTransName();
+		CetakStrukBkpn(PRN_NORMAL);
+	}
+
+
+	return 0;
+
+	lblKO:
+		return FALSE;
+}
+
+
+
+
+int MenuMatmBkpnBayarAdmin(void)
+{
+	int		iRet, iMenuNo;
+	static	MenuItem stTranMenu[2] =
+	{
+		{TRUE, _T_NOOP("BELI KERTAS EDC"),		NULL}
+
+	};
+	static	uchar	szPrompt[]       = _T_NOOP("PLS SELECT:");
+
+	iMenuNo = PubGetMenu((uchar *)_T(szPrompt), stTranMenu, MENU_AUTOSNO|MENU_PROMPT, USER_OPER_TIMEOUT);
+	switch( iMenuNo )
+	{
+	case 0:
+		iRet = MenuMatmBkpnRoll();
+		break;
+
+
+	default:
+		if(getkey()==KEYCANCEL)return ERR_NO_DISP;
+	}
+
+	return iRet;
+}
+
+
+int MenuMatmBkpnRoll(void)
+{
+	int		iRet, iMenuNo;
+	static	MenuItem stTranMenu[3] =
+	{
+		{TRUE, _T_NOOP("10 ROLL"),		NULL},
+		{TRUE, _T_NOOP("20 ROLL"),		NULL}
+
+	};
+	static	uchar	szPrompt[]       = _T_NOOP("PLS SELECT:");
+
+	iMenuNo = PubGetMenu((uchar *)_T(szPrompt), stTranMenu, MENU_AUTOSNO|MENU_PROMPT, USER_OPER_TIMEOUT);
+	switch( iMenuNo )
+	{
+	case 0:
+		iRet = TransBeliKertasRoll1();
+		break;
+
+	case 1:
+		iRet = TransBeliKertasRoll2();
+		break;
+
+
+
+	default:
+		if(getkey()==KEYCANCEL)return ERR_NO_DISP;
+	}
+
+	return iRet;
+}
+
+
+
+
+int TransBeliKertasRoll1(void)
+{
+	int		ret;
+	int		iRet;
+	uchar 	ucRet;
+	char 	bit48Rsp[lenBit48+1];
+	char 	nama[30+1];
+	ulong 	lenData;
+	uchar	ucEntryMode=0;
+
+	char 	bit48Req[148+1];
+	char		KodeBank[148+1];
+	char 	noRek[28+1];
+	char		noRef[16+1];
+
+	char 	bankAsal[20+1];
+	char 	bankTujuan[20+1];
+	char 	uang[12+1];
+	char		uangFmt[20+1];
+
+	char 	norekAsal[28+1];
+
+	char screenUang[21+1];
+	char screenBankAsal[21+1];
+	char screenBankTujuan[21+1];
+	char screenNoRek[21+1];
+	char screenNoRef[21+1];
+
+	
+	char 	bit103Req[28+1];
+	char 	bit102Rsp[28+1];
+	char 	bit103Rsp[28+1];
+
+	char 	bankTujuanFinal[28+1];
+
+	char	ListKodeBank[20+1];
+	char	ListNamaBank[20+1];
+
+	uchar	ucKey;
+
+	byte jenisRekening;
+	//mapGetByte(traSumberRek, jenisRekening);
+
+	MEM_ZERO(screenUang);
+	MEM_ZERO(screenBankAsal);
+	MEM_ZERO(screenBankTujuan);
+	MEM_ZERO(screenNoRek);
+	MEM_ZERO(screenNoRef);
+
+	MEM_ZERO(bankTujuanFinal);
+
+	MEM_ZERO(ListKodeBank);
+	MEM_ZERO(ListNamaBank);
+
+
+	////////--------------
+	ScrCls();
+	strcpy(glProcInfo.stTranLog.szTransName,"BELI KERTAS ROLL");
+	PubDispStringASCII("BELI KERTAS ROLL", DISP_LINE_CENTER|0);
+	
+	ScrCls();
+	PubDispStringASCII("BELI KERTAS", DISP_LINE_CENTER|0);
+	PubDispStringASCII("Inquery Sending ...", DISP_LINE_LEFT|4);
+	PubWaitKey(2);
+
+	ScrCls();
+	PubDispStringASCII("BELI KERTAS", DISP_LINE_CENTER|0);
+	PubDispStringASCII("JUMLAH: 10 ROLL", DISP_LINE_LEFT|3);
+	PubDispStringASCII("RP 59.000 ", DISP_LINE_LEFT|4);
+	PubDispStringASCII("", DISP_LINE_LEFT|5);
+	PubWaitKey(5);
+	///////////-----------------------
+
+	strcpy(glProcInfo.stTranLog.szTransName,"TRANSFER");
+			
+	iRet = TransInit(TRANS_TYPE_INQ_TRFANTARBANK_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	ucEntryMode = CARD_SWIPED|SKIP_CHECK_ICC;
+	
+	if(!ucEntryMode)
+	{
+		return ERR_NO_DISP;
+	}
+
+
+	/*
+	
+	iRet = GetCard(ucEntryMode);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	*/
+	
+	////// diki add komen   RUN_FUNCTION(PilihJenisRekening, lblKO);
+	///RUN_FUNCTION(PilihJenisRekeningBkpn, lblKO);
+	mapPutByte(traSumberRek, 2);
+
+	MEM_ZERO(bit48Req);
+	MEM_ZERO(KodeBank);
+	MEM_ZERO(noRek);
+	MEM_ZERO(noRef);
+
+	MEM_ZERO(bit103Req);
+	
+	mapGetByte(traSumberRek, jenisRekening);
+	switch(jenisRekening)
+		{
+		case 1:
+			ScrCls();
+			iRet = GetCard(ucEntryMode);
+				if( iRet!=0 )
+				{
+					return iRet;
+				}
+	
+			ScrCls();
+			DispTransName();
+			PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+			PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			////memcpy(bit48Req+3,noRek,strlen(noRek));
+			//memcpy(bit103Req,noRek,strlen(noRek));
+			
+			memcpy(bankTujuanFinal,"00",2);
+			strcat(bankTujuanFinal,noRek);
+
+			memcpy(bit103Req,bankTujuanFinal,strlen(bankTujuanFinal));
+
+
+			
+			break;
+		case 2:
+
+			ScrCls();
+			iRet = GetCard(ucEntryMode);
+				if( iRet!=0 )
+				{
+					return iRet;
+				}
+
+
+			memcpy(KodeBank,"441",3);
+		fmtPad(KodeBank, 20, ' ');
+		memcpy(bit48Req,KodeBank,strlen(KodeBank));
+
+		memcpy(bit103Req,glSysCtrl.szNoRekeningBkpn2,strlen(glSysCtrl.szNoRekeningBkpn2));
+	
+			
+		/*
+		while(1)
+		{
+			ScrCls();
+			//DispTransName();
+			PubDispString("LIHAT DAFTAR:", DISP_LINE_LEFT|0);
+			PubDispString("KODE BANK ?", DISP_LINE_LEFT|2);
+			PubDispString("NO       YES", DISP_LINE_LEFT|6);
+			
+		ucKey = PubWaitKey(30);
+			if ((ucKey==KEYENTER) || (ucKey==KEYUP) || (ucKey==KEYDOWN))
+			{
+			//TransInfoKodeBankBkpn();
+			TransInfoKodeBankBkpn2();
+			//continue;
+			}
+			else 
+				{
+				break;
+				}
+		}
+
+
+			ScrCls();
+			DispTransName();
+			PubDispString("MASUKKAN", DISP_LINE_LEFT|2);
+			PubDispString("KODE BANK :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 3,10 , KodeBank, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			fmtPad(KodeBank, 20, ' ');
+
+			memcpy(bit48Req,KodeBank,strlen(KodeBank));
+			//memcpy(bit48Req+3,"                                                                                                                                                ",144);
+			//memcpy(bit103Req,KodeBank,strlen(KodeBank));
+
+			ScrCls();
+			DispTransName();
+			PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+			PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			////memcpy(bit48Req+3,noRek,strlen(noRek));
+			///memcpy(bit103Req+3,noRek,strlen(noRek));
+			memcpy(bit103Req,noRek,strlen(noRek));
+			*/
+			break;
+		}
+
+
+	/*
+	ScrCls();
+	DispTransName();
+	PubDispString("KODE BANK :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 3,3 , KodeBank, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	///memcpy(bit48Req,KodeBank,strlen(KodeBank));
+	memcpy(bit103Req,KodeBank,strlen(KodeBank));
+
+	ScrCls();
+	DispTransName();
+	PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+	PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	////memcpy(bit48Req+3,noRek,strlen(noRek));
+	memcpy(bit103Req+3,noRek,strlen(noRek));
+	*/
+
+	/*
+	iRet = InputUangBkpn();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+	*/
+	strcpy(glProcInfo.stTranLog.szAmount,"000005900000");
+
+	/*
+	ScrCls();
+	DispTransName();
+	PubDispString("CUST REF NUMBER", DISP_LINE_LEFT|2);
+	PubDispString("ATAU LANJUT  :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 0, 16, noRef, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	memcpy(bit48Req+23,noRef,strlen(noRef));
+	*/
+	strcpy(glProcInfo.szReq48,bit48Req);
+	strcpy(glProcInfo.szReq103,bit103Req);
+
+	//GET PIN
+	ScrCls();
+	DispTransName();
+	iRet = GetPIN_Manual_MiniAtmBkpn(FALSE);	//get pin
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SET ISO 8583
+	////// diki add komen  setPackInqTransferAntarBank();
+	setPackInqTransferAntarBankBkpn();
+
+	//SEND REVERSAL
+	iRet = TranReversal();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+
+	displayResponse();
+
+	//CHECK RESPONSE FROM HOST
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		displayResponse();
+		return ERR_NO_DISP;
+	}
+
+	MEM_ZERO(bit48Rsp);
+	MEM_ZERO(bit102Rsp);
+	MEM_ZERO(bit103Rsp);
+	//bit102Rsp
+
+	// Overbook / Fund Transfer BIT 48 Respone
+	// Destination bank 	AN 20 	left, pad blank
+	// Destination branch	AN 20 	left, pad blank
+	// Transfer media 		N 1 		1:llg, 2:rtgs, 3:fund transfer
+	// Destination name	AN 30 	left, pad blank
+	// Current balance		N-16, 2 	right, pad zerro
+	// Transfer messsage	AN 60 	left, pad blank
+	
+	PubChar2Long(glRecvPack.szBit48, 2, &lenData);
+	memcpy(bit48Rsp, glRecvPack.szBit48+2, lenData);
+	mapPutStr(traResponseInq,bit48Rsp);
+
+	PubChar2Long(glRecvPack.szField102, 2, &lenData);
+	memcpy(bit102Rsp, glRecvPack.szField102+2, lenData);
+
+	PubChar2Long(glRecvPack.szField103, 2, &lenData);
+	memcpy(bit103Rsp, glRecvPack.szField103+2, lenData);
+
+	MEM_ZERO(nama);
+	MEM_ZERO(bankAsal);
+	MEM_ZERO(bankTujuan);
+	MEM_ZERO(norekAsal);
+
+	memcpy(ListKodeBank,bit48Rsp,3);
+	TransInfoKodeBankBkpnPilih(ListNamaBank, ListKodeBank);
+	memcpy(bankTujuan,ListNamaBank,strlen(ListNamaBank));
+	
+	
+	////memcpy(bankTujuan,bit48Rsp+20,20);
+	//memcpy(bankTujuan,bit48Rsp+45,15);
+	//memcpy(nama,bit48Rsp+40,20);
+
+	//memcpy(norekAsal,bit102Rsp,28);
+	//memcpy(noRek,bit103Rsp,28);
+	switch(jenisRekening)
+		{
+		case 1:
+			memcpy(norekAsal,bit102Rsp+2,26);
+			memcpy(noRek,bit103Rsp+2,26);
+			memcpy(nama,bit48Rsp+40,20);
+			break;
+		case 2:
+			memcpy(norekAsal,bit102Rsp,28);
+			memcpy(noRek,bit103Rsp,28);
+			memcpy(nama,bit48Rsp+41,20);
+			break;
+		}
+	
+
+	MEM_ZERO(uang);
+	MEM_ZERO(uangFmt);
+	memcpy(uang,glProcInfo.stTranLog.szAmount,10);
+	fmtAmt(uangFmt,uang,0,",.");
+	sprintf(screenUang,"Rp. %s",uangFmt);
+
+	ScrCls();
+	PubDispStringASCII("TRANSFER BANK", DISP_LINE_CENTER|0);
+	///PubDispStringASCII("TRANSFER ANTAR BANK", DISP_LINE_CENTER|0);
+	///PubDispStringASCII("Bank Asal :", DISP_LINE_LEFT|1);
+	///PubDispStringASCII(bankAsal, DISP_LINE_LEFT|2);
+	PubDispStringASCII("No.Rek Asal :", DISP_LINE_LEFT|1);
+	PubDispStringASCII(norekAsal, DISP_LINE_LEFT|2);
+	PubDispStringASCII("Bank Tujuan :", DISP_LINE_LEFT|3);
+	PubDispStringASCII(bankTujuan, DISP_LINE_LEFT|4);
+	PubDispStringASCII("Rek Tujuan  :", DISP_LINE_LEFT|5);
+	PubDispStringASCII(noRek, DISP_LINE_LEFT|6);
+	PubDispStringASCII("Keluar  Lanjut", DISP_LINE_RIGHT|7);
+
+	ucRet= PubYesNoFNUP(USER_INPUT_TIMEOUT);
+	if(ucRet!=0)
+		return 0;
+
+	ScrCls();
+	PubDispStringASCII("Nama :", DISP_LINE_LEFT|0);
+	PubDispStringASCII(nama, DISP_LINE_LEFT|1);
+	///PubDispStringASCII("Cust Ref No :", DISP_LINE_LEFT|2);
+	///PubDispStringASCII(noRef, DISP_LINE_LEFT|3);
+	PubDispStringASCII("Jumlah :", DISP_LINE_LEFT|4);
+	PubDispStringASCII(screenUang, DISP_LINE_RIGHT|5);
+	PubDispStringASCII("Keluar  Lanjut", DISP_LINE_RIGHT|7);
+
+	ucRet= PubYesNoFNUP(USER_INPUT_TIMEOUT);
+	if(ucRet!=0)
+		return 0;
+	
+	//iRet = TransInit(TRANS_TYPE_INQ_TRFANTARBANK_BKPN);
+	// TRANS_TYPE_TRFANTARBANK_BKPN
+	iRet = TransInit(TRANS_TYPE_TRFANTARBANK_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+
+	strcpy(glProcInfo.szReq48,bit48Rsp);
+	//strcpy(glProcInfo.szReq102,bit102Rsp);
+	strcpy(glProcInfo.szReq103,bit103Rsp);
+
+
+	///// UPDATE MINI ATM BUKOPIN FOR TRANSFER ANTAR BANK!!!  UPDATE!
+	switch(jenisRekening)
+			{
+			case 1:
+				strcpy(glProcInfo.szReq102,bit102Rsp);
+			
+				break;
+			case 2:
+				strcpy(glProcInfo.szReq102,"10");
+				break;
+			}
+	
+
+
+	
+	////// diki add komen  setPackTransferAntarBank();
+	setPackTransferAntarBankBkpn();
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+	displayResponse();
+
+	//CHECK RESPONSE FROM HOST
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		return ERR_NO_DISP;
+	}
+
+	////// diki add komen unPackTransfer_AntarBank();
+	unPackTransfer_AntarBankBkpn();
+
+	//SAVE TRANSACTION
+	if( ChkIfSaveLog() )
+	{
+		SaveMiniAtmTranLog(&glProcInfo.stTranLog);
+		GetNewInvoiceNo();
+	}
+
+
+	/*
+	//SAVE TRANSACTION
+	if( ChkIfSaveLog() )
+	{
+		SaveTranLog(&glProcInfo.stTranLog);
+		GetNewInvoiceNo();
+	}
+	*/
+
+	//CLEAR REVERSAL
+	SaveRevInfo(FALSE);
+	
+	//DISCONNECT FROM HOST
+    CommOnHook(FALSE);
+
+
+	//PRINT RECEIPT
+	if( ChkIfPrnReceipt() )
+	{
+		DispTransName();
+		CetakStrukBkpn(PRN_NORMAL);
+	}
+
+
+	return 0;
+
+	lblKO:
+		return FALSE;
+	
+	
+}
+
+
+
+int TransBeliKertasRoll2(void)
+{
+	int		ret;
+	int		iRet;
+	uchar 	ucRet;
+	char 	bit48Rsp[lenBit48+1];
+	char 	nama[30+1];
+	ulong 	lenData;
+	uchar	ucEntryMode=0;
+
+	char 	bit48Req[148+1];
+	char		KodeBank[148+1];
+	char 	noRek[28+1];
+	char		noRef[16+1];
+
+	char 	bankAsal[20+1];
+	char 	bankTujuan[20+1];
+	char 	uang[12+1];
+	char		uangFmt[20+1];
+
+	char 	norekAsal[28+1];
+
+	char screenUang[21+1];
+	char screenBankAsal[21+1];
+	char screenBankTujuan[21+1];
+	char screenNoRek[21+1];
+	char screenNoRef[21+1];
+
+	
+	char 	bit103Req[28+1];
+	char 	bit102Rsp[28+1];
+	char 	bit103Rsp[28+1];
+
+	char 	bankTujuanFinal[28+1];
+
+	char	ListKodeBank[20+1];
+	char	ListNamaBank[20+1];
+
+	uchar	ucKey;
+
+	byte jenisRekening;
+	//mapGetByte(traSumberRek, jenisRekening);
+
+	MEM_ZERO(screenUang);
+	MEM_ZERO(screenBankAsal);
+	MEM_ZERO(screenBankTujuan);
+	MEM_ZERO(screenNoRek);
+	MEM_ZERO(screenNoRef);
+
+	MEM_ZERO(bankTujuanFinal);
+
+	MEM_ZERO(ListKodeBank);
+	MEM_ZERO(ListNamaBank);
+
+
+	////////--------------
+	ScrCls();
+	strcpy(glProcInfo.stTranLog.szTransName,"BELI KERTAS ROLL");
+	PubDispStringASCII("BELI KERTAS ROLL", DISP_LINE_CENTER|0);
+	
+	ScrCls();
+	PubDispStringASCII("BELI KERTAS", DISP_LINE_CENTER|0);
+	PubDispStringASCII("Inquery Sending ...", DISP_LINE_LEFT|4);
+	PubWaitKey(2);
+
+	ScrCls();
+	PubDispStringASCII("BELI KERTAS", DISP_LINE_CENTER|0);
+	PubDispStringASCII("JUMLAH: 20 ROLL", DISP_LINE_LEFT|3);
+	PubDispStringASCII("RP 115.000 ", DISP_LINE_LEFT|4);
+	PubDispStringASCII("", DISP_LINE_LEFT|5);
+	PubWaitKey(5);
+	///////////-----------------------
+
+	strcpy(glProcInfo.stTranLog.szTransName,"TRANSFER");
+			
+	iRet = TransInit(TRANS_TYPE_INQ_TRFANTARBANK_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	ucEntryMode = CARD_SWIPED|SKIP_CHECK_ICC;
+	
+	if(!ucEntryMode)
+	{
+		return ERR_NO_DISP;
+	}
+
+
+	/*
+	
+	iRet = GetCard(ucEntryMode);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	*/
+	
+	////// diki add komen   RUN_FUNCTION(PilihJenisRekening, lblKO);
+	///RUN_FUNCTION(PilihJenisRekeningBkpn, lblKO);
+	mapPutByte(traSumberRek, 2);
+
+	MEM_ZERO(bit48Req);
+	MEM_ZERO(KodeBank);
+	MEM_ZERO(noRek);
+	MEM_ZERO(noRef);
+
+	MEM_ZERO(bit103Req);
+	
+	mapGetByte(traSumberRek, jenisRekening);
+	switch(jenisRekening)
+		{
+		case 1:
+			ScrCls();
+			iRet = GetCard(ucEntryMode);
+				if( iRet!=0 )
+				{
+					return iRet;
+				}
+	
+			ScrCls();
+			DispTransName();
+			PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+			PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			////memcpy(bit48Req+3,noRek,strlen(noRek));
+			//memcpy(bit103Req,noRek,strlen(noRek));
+			
+			memcpy(bankTujuanFinal,"00",2);
+			strcat(bankTujuanFinal,noRek);
+
+			memcpy(bit103Req,bankTujuanFinal,strlen(bankTujuanFinal));
+
+
+			
+			break;
+		case 2:
+
+			ScrCls();
+			iRet = GetCard(ucEntryMode);
+				if( iRet!=0 )
+				{
+					return iRet;
+				}
+
+
+			memcpy(KodeBank,"441",3);
+		fmtPad(KodeBank, 20, ' ');
+		memcpy(bit48Req,KodeBank,strlen(KodeBank));
+
+		memcpy(bit103Req,glSysCtrl.szNoRekeningBkpn2,strlen(glSysCtrl.szNoRekeningBkpn2));
+	
+			
+		/*
+		while(1)
+		{
+			ScrCls();
+			//DispTransName();
+			PubDispString("LIHAT DAFTAR:", DISP_LINE_LEFT|0);
+			PubDispString("KODE BANK ?", DISP_LINE_LEFT|2);
+			PubDispString("NO       YES", DISP_LINE_LEFT|6);
+			
+		ucKey = PubWaitKey(30);
+			if ((ucKey==KEYENTER) || (ucKey==KEYUP) || (ucKey==KEYDOWN))
+			{
+			//TransInfoKodeBankBkpn();
+			TransInfoKodeBankBkpn2();
+			//continue;
+			}
+			else 
+				{
+				break;
+				}
+		}
+
+
+			ScrCls();
+			DispTransName();
+			PubDispString("MASUKKAN", DISP_LINE_LEFT|2);
+			PubDispString("KODE BANK :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 3,10 , KodeBank, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			fmtPad(KodeBank, 20, ' ');
+
+			memcpy(bit48Req,KodeBank,strlen(KodeBank));
+			//memcpy(bit48Req+3,"                                                                                                                                                ",144);
+			//memcpy(bit103Req,KodeBank,strlen(KodeBank));
+
+			ScrCls();
+			DispTransName();
+			PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+			PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+			ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+			if( ucRet!=0 )
+			{
+				return ERR_USERCANCEL;
+			}
+
+			////memcpy(bit48Req+3,noRek,strlen(noRek));
+			///memcpy(bit103Req+3,noRek,strlen(noRek));
+			memcpy(bit103Req,noRek,strlen(noRek));
+			*/
+			break;
+		}
+
+
+	/*
+	ScrCls();
+	DispTransName();
+	PubDispString("KODE BANK :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 3,3 , KodeBank, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	///memcpy(bit48Req,KodeBank,strlen(KodeBank));
+	memcpy(bit103Req,KodeBank,strlen(KodeBank));
+
+	ScrCls();
+	DispTransName();
+	PubDispString("ENTER REKENING", DISP_LINE_LEFT|2);
+	PubDispString("TUJUAN :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 10, 15, noRek, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	////memcpy(bit48Req+3,noRek,strlen(noRek));
+	memcpy(bit103Req+3,noRek,strlen(noRek));
+	*/
+
+	/*
+	iRet = InputUangBkpn();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+	*/
+	strcpy(glProcInfo.stTranLog.szAmount,"000011500000");
+
+	/*
+	ScrCls();
+	DispTransName();
+	PubDispString("CUST REF NUMBER", DISP_LINE_LEFT|2);
+	PubDispString("ATAU LANJUT  :", DISP_LINE_LEFT|4);
+	ucRet = PubGetString(NUM_IN, 0, 16, noRef, USER_OPER_TIMEOUT);
+	if( ucRet!=0 )
+	{
+		return ERR_USERCANCEL;
+	}
+
+	memcpy(bit48Req+23,noRef,strlen(noRef));
+	*/
+	strcpy(glProcInfo.szReq48,bit48Req);
+	strcpy(glProcInfo.szReq103,bit103Req);
+
+	//GET PIN
+	ScrCls();
+	DispTransName();
+	iRet = GetPIN_Manual_MiniAtmBkpn(FALSE);	//get pin
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SET ISO 8583
+	////// diki add komen  setPackInqTransferAntarBank();
+	setPackInqTransferAntarBankBkpn();
+
+	//SEND REVERSAL
+	iRet = TranReversal();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+
+	displayResponse();
+
+	//CHECK RESPONSE FROM HOST
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		displayResponse();
+		return ERR_NO_DISP;
+	}
+
+	MEM_ZERO(bit48Rsp);
+	MEM_ZERO(bit102Rsp);
+	MEM_ZERO(bit103Rsp);
+	//bit102Rsp
+
+	// Overbook / Fund Transfer BIT 48 Respone
+	// Destination bank 	AN 20 	left, pad blank
+	// Destination branch	AN 20 	left, pad blank
+	// Transfer media 		N 1 		1:llg, 2:rtgs, 3:fund transfer
+	// Destination name	AN 30 	left, pad blank
+	// Current balance		N-16, 2 	right, pad zerro
+	// Transfer messsage	AN 60 	left, pad blank
+	
+	PubChar2Long(glRecvPack.szBit48, 2, &lenData);
+	memcpy(bit48Rsp, glRecvPack.szBit48+2, lenData);
+	mapPutStr(traResponseInq,bit48Rsp);
+
+	PubChar2Long(glRecvPack.szField102, 2, &lenData);
+	memcpy(bit102Rsp, glRecvPack.szField102+2, lenData);
+
+	PubChar2Long(glRecvPack.szField103, 2, &lenData);
+	memcpy(bit103Rsp, glRecvPack.szField103+2, lenData);
+
+	MEM_ZERO(nama);
+	MEM_ZERO(bankAsal);
+	MEM_ZERO(bankTujuan);
+	MEM_ZERO(norekAsal);
+
+	memcpy(ListKodeBank,bit48Rsp,3);
+	TransInfoKodeBankBkpnPilih(ListNamaBank, ListKodeBank);
+	memcpy(bankTujuan,ListNamaBank,strlen(ListNamaBank));
+	
+	
+	////memcpy(bankTujuan,bit48Rsp+20,20);
+	//memcpy(bankTujuan,bit48Rsp+45,15);
+	//memcpy(nama,bit48Rsp+40,20);
+
+	//memcpy(norekAsal,bit102Rsp,28);
+	//memcpy(noRek,bit103Rsp,28);
+	switch(jenisRekening)
+		{
+		case 1:
+			memcpy(norekAsal,bit102Rsp+2,26);
+			memcpy(noRek,bit103Rsp+2,26);
+			memcpy(nama,bit48Rsp+40,20);
+			break;
+		case 2:
+			memcpy(norekAsal,bit102Rsp,28);
+			memcpy(noRek,bit103Rsp,28);
+			memcpy(nama,bit48Rsp+41,20);
+			break;
+		}
+	
+
+	MEM_ZERO(uang);
+	MEM_ZERO(uangFmt);
+	memcpy(uang,glProcInfo.stTranLog.szAmount,10);
+	fmtAmt(uangFmt,uang,0,",.");
+	sprintf(screenUang,"Rp. %s",uangFmt);
+
+	ScrCls();
+	PubDispStringASCII("TRANSFER BANK", DISP_LINE_CENTER|0);
+	///PubDispStringASCII("TRANSFER ANTAR BANK", DISP_LINE_CENTER|0);
+	///PubDispStringASCII("Bank Asal :", DISP_LINE_LEFT|1);
+	///PubDispStringASCII(bankAsal, DISP_LINE_LEFT|2);
+	PubDispStringASCII("No.Rek Asal :", DISP_LINE_LEFT|1);
+	PubDispStringASCII(norekAsal, DISP_LINE_LEFT|2);
+	PubDispStringASCII("Bank Tujuan :", DISP_LINE_LEFT|3);
+	PubDispStringASCII(bankTujuan, DISP_LINE_LEFT|4);
+	PubDispStringASCII("Rek Tujuan  :", DISP_LINE_LEFT|5);
+	PubDispStringASCII(noRek, DISP_LINE_LEFT|6);
+	PubDispStringASCII("Keluar  Lanjut", DISP_LINE_RIGHT|7);
+
+	ucRet= PubYesNoFNUP(USER_INPUT_TIMEOUT);
+	if(ucRet!=0)
+		return 0;
+
+	ScrCls();
+	PubDispStringASCII("Nama :", DISP_LINE_LEFT|0);
+	PubDispStringASCII(nama, DISP_LINE_LEFT|1);
+	///PubDispStringASCII("Cust Ref No :", DISP_LINE_LEFT|2);
+	///PubDispStringASCII(noRef, DISP_LINE_LEFT|3);
+	PubDispStringASCII("Jumlah :", DISP_LINE_LEFT|4);
+	PubDispStringASCII(screenUang, DISP_LINE_RIGHT|5);
+	PubDispStringASCII("Keluar  Lanjut", DISP_LINE_RIGHT|7);
+
+	ucRet= PubYesNoFNUP(USER_INPUT_TIMEOUT);
+	if(ucRet!=0)
+		return 0;
+	
+	//iRet = TransInit(TRANS_TYPE_INQ_TRFANTARBANK_BKPN);
+	// TRANS_TYPE_TRFANTARBANK_BKPN
+	iRet = TransInit(TRANS_TYPE_TRFANTARBANK_BKPN);
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+
+
+	strcpy(glProcInfo.szReq48,bit48Rsp);
+	//strcpy(glProcInfo.szReq102,bit102Rsp);
+	strcpy(glProcInfo.szReq103,bit103Rsp);
+
+
+	///// UPDATE MINI ATM BUKOPIN FOR TRANSFER ANTAR BANK!!!  UPDATE!
+	switch(jenisRekening)
+			{
+			case 1:
+				strcpy(glProcInfo.szReq102,bit102Rsp);
+			
+				break;
+			case 2:
+				strcpy(glProcInfo.szReq102,"10");
+				break;
+			}
+	
+
+
+	
+	////// diki add komen  setPackTransferAntarBank();
+	setPackTransferAntarBankBkpn();
+
+	//SEND MESSAGE TO HOST
+	iRet = SendPacket();
+	if( iRet!=0 )
+	{
+		return iRet;
+	}
+
+	//RECV MESSAGE FROM HOST
+	iRet = RecvPacket();
+	if( iRet!=0 )
+	{
+		if(iRet==ERR_COMM_ERROR)
+		{
+			//AUTO REVERSAL
+			iRet = TranReversal();
+			if( iRet!=0 )
+			{
+				return iRet;
+			}
+		}
+		return iRet;
+	}
+	
+	displayResponse();
+
+	//CHECK RESPONSE FROM HOST
+	if ( memcmp(glProcInfo.stTranLog.szRspCode, "00", 2)!=0 )
+	{
+		CommOnHook(FALSE);
+		SaveRevInfo(FALSE);
+
+		return ERR_NO_DISP;
+	}
+
+	////// diki add komen unPackTransfer_AntarBank();
+	unPackTransfer_AntarBankBkpn();
+
+	//SAVE TRANSACTION
+	if( ChkIfSaveLog() )
+	{
+		SaveMiniAtmTranLog(&glProcInfo.stTranLog);
+		GetNewInvoiceNo();
+	}
+
+
+	/*
+	//SAVE TRANSACTION
+	if( ChkIfSaveLog() )
+	{
+		SaveTranLog(&glProcInfo.stTranLog);
+		GetNewInvoiceNo();
+	}
+	*/
+
+	//CLEAR REVERSAL
+	SaveRevInfo(FALSE);
+	
+	//DISCONNECT FROM HOST
+    CommOnHook(FALSE);
+
+
+	//PRINT RECEIPT
+	if( ChkIfPrnReceipt() )
+	{
+		DispTransName();
+		CetakStrukBkpn(PRN_NORMAL);
+	}
+
+
+	return 0;
+
+	lblKO:
+		return FALSE;
+}
 
 
 

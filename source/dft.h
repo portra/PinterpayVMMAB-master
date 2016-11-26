@@ -5,9 +5,15 @@
 
 static char *dftMnu[DIM(mnuBeg,mnuEnd)]={
     "0 MENU UTAMA      ", //mnuMainMenu
-    "1 PINTERPAY", //mnuUtamaPinterpay
-    "1 ATMB", //mnuUtamaATMB
+    ///"1 PINTERPAY", //mnuUtamaPinterpay
+    "1 POINTRANS", //mnuUtamaPinterpayPoinTrans
+    "1 PULSA ELEKTRIK", //mnuUtamaPinterpayPulsaElektrik
+    "1 PPOB", //mnuUtamaPinterpayPPOB
+    "1 ATM BERSAMA", //mnuUtamaATMB
+    ////"1 PURCHASE", //mnuUtamaATMB
     ////"1 KARTU KREDIT", //mnuUtamaKartuKredit
+    ///"1 MINI ATM", //mnuUtamaMiniAtm
+    ////"1 BAYAR PENJUALAN", //mnuUtamaPurchaseScm
     "1 MINI ATM", //mnuUtamaMiniAtm
     "1 KARTU KREDIT", //mnuUtamaKartuKredit
     ////"1 ATMB", //mnuUtamaATMB
@@ -19,9 +25,10 @@ static char *dftMnu[DIM(mnuBeg,mnuEnd)]={
 ///    "1 PRVT LABEL TAP", // mnuPrvtLblTes
     "2 MINI ATM", //mnuMiniAtmBkpn
     "3 MERCHANT", //mnuMiniAtmBkpnMer
-    "3 NASABAH", //mnuMiniAtmBkpnNas
-	"4 SETOR TUNAI", //mnuSetorBkpn
-	"4 TARIK TUNAI", //mnuTarikBkpn
+    ////"3 NASABAH", //mnuMiniAtmBkpnNas
+    "3 ATM MINI", //mnuMiniAtmBkpnNas
+	////"4 SETOR TUNAI", //mnuSetorBkpn
+	////"4 TARIK TUNAI", //mnuTarikBkpn
 	"4 TRANSFER", //mnuTransferBkpn
 	"5 TRAN BUKOPIN", //mnuTranBukopinBkpn
 	"5 TRAN BANK LAIN ", //mnuTranBankLainBkpn
@@ -50,7 +57,7 @@ static char *dftMnu[DIM(mnuBeg,mnuEnd)]={
 	"6 KK BNI", //mnuKartuKreditBkpnBni,
 	"6 KK HSBC", //mnuKartuKreditBkpnHsbc
 	"4 PEMBELIAN", //mnuPembelianBkpn
-	"5 E-VOUCHER", //mnuEvoucherBkpn
+	"5 PULSA", //mnuEvoucherBkpn
 	"6 XL", //mnuEvoucherBkpnXl
 	"6 TELKOMSEL", //mnuEvoucherBkpnTelkomsel
 	"6 INDOSAT OOREDOO", //mnuEvoucherBkpnIndosat
@@ -60,9 +67,12 @@ static char *dftMnu[DIM(mnuBeg,mnuEnd)]={
 	"6 PLN PREPAID", //mnuPlnPrepaidBkpn
 	"6 MANUAL ADVICE", //mnuManualAdviceBkpn
 	"4 INFORMASI", //mnuInformasiBkpn
-	"5 INFO SALDO", //mnuInfoSaldoBkpn
+	"5 SALDO BUKOPIN", //mnuInfoSaldoBkpn
+	"5 TEST HOST", //mnuTestHostBkpn
 	"5 INFO KODE BANK", //mnuKodeBankBkpn
 	"5 INFO TRANSAKSI", //mnuInfoTransaksiBkpn
+	"4 BAYAR ADMIN", //mnuBayarAdmin,
+	"5 BELI KERTAS EDC", //mnuBayarAdminBeliRoll,
 	"4 CETAK ULANG", //mnuCetakUlangBkpn
 	"5 TRANSAKSI TERAKHIR", //mnuTransaksiTerakhirBkpn
 	"5 TRANSAKSI NO", //mnuTransaksiNoBkpn
@@ -73,8 +83,14 @@ static char *dftMnu[DIM(mnuBeg,mnuEnd)]={
 	"4 LAIN-LAIN", //mnuLainlainBkpn
 	"5 UBAH PIN", //mnuUbahPinBkpn
 	"5 UBAH BAHASA", //mnuUbahBahasaBkpn
-	"4 SETUP", //mnuSetupBkpn
+	"4 SETUP MATM", //mnuSetupBkpn
 	"5 INIT KARTU", //mnuInitKartuBukopin
+	"5 INIT NO REK", //mnuInitNorekBukopin
+	"5 INIT NO REK 2", //mnuInitNorekBukopin2
+	"4 SETUP ATMB", //mnuSetupAtmb
+	"4 CLEAR REVERSAL", //mnuClearReversalBkpn
+	"4 CLEAR BATCH", //mnuClearBatchBkpn
+	"4 SET KONEKSI", //mnuSetKoneksiBkpn
 	/*
     "2 TRANSFER  ", //mnuTransferBkpn
 	"2 TELKOM  ", //mnuTelkomBkpn
